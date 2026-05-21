@@ -6,7 +6,7 @@
 <title>BlackPegasus — KPI Intelligence Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   :root {
@@ -122,7 +122,7 @@
     font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
     color: var(--text3); font-family: var(--font-mono); margin-bottom: 10px;
   }
-  .kpi-value { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1; font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   .kpi-value span { font-size: 14px; font-weight: 400; color: var(--text3); }
   .kpi-sub { font-size: 11px; color: var(--text2); margin-top: 6px; font-family: var(--font-mono); }
 
@@ -182,7 +182,7 @@
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: rgba(79,158,255,0.04); }
   tbody td { padding: 10px 16px; color: var(--text2); vertical-align: middle; }
-  tbody td:not(:first-child) { text-align: right; font-family: var(--font-mono); font-size: 11px; }
+  tbody td:not(:first-child) { text-align: right; font-family: var(--font-num); font-size: 12px; font-variant-numeric: tabular-nums; }
   .rank-badge {
     display: inline-flex; align-items: center; justify-content: center;
     width: 20px; height: 20px; border-radius: 4px;
@@ -212,9 +212,9 @@
     padding: 16px 18px;
   }
   .seg-bucket { font-size: 11px; color: var(--accent); font-family: var(--font-mono); margin-bottom: 6px; }
-  .seg-orders { font-size: 26px; font-weight: 800; color: var(--text); }
+  .seg-orders { font-size: 26px; font-weight: 800; color: var(--text); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   .seg-orders span { font-size: 12px; font-weight: 400; color: var(--text3); }
-  .seg-revenue { font-size: 13px; font-weight: 600; color: var(--accent2); margin-top: 4px; }
+  .seg-revenue { font-size: 13px; font-weight: 600; color: var(--accent2); margin-top: 4px; font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   .seg-bar-wrap { height: 3px; background: var(--border); border-radius: 2px; margin-top: 10px; }
   .seg-bar { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
 
@@ -229,7 +229,7 @@
   .type-name { font-size: 12px; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
   .type-stat { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
   .type-stat-label { font-size: 10px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; }
-  .type-stat-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: var(--font-mono); }
+  .type-stat-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
 
   /* REPEAT CUSTOMERS */
   .customer-list { }
@@ -253,7 +253,7 @@
   .c-name { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .c-orders { font-size: 10px; color: var(--text3); font-family: var(--font-mono); margin-top: 1px; }
   .c-value { text-align: right; }
-  .c-egp { font-size: 13px; font-weight: 700; color: var(--accent2); font-family: var(--font-mono); }
+  .c-egp { font-size: 13px; font-weight: 700; color: var(--accent2); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   .c-avg { font-size: 10px; color: var(--text3); font-family: var(--font-mono); margin-top: 1px; }
 
   /* FOOTER */
@@ -294,6 +294,83 @@
   .delay-3 { animation-delay: 0.15s; }
   .delay-4 { animation-delay: 0.20s; }
   .delay-5 { animation-delay: 0.25s; }
+
+
+  /* ═══════════════════════════════════════
+     MOBILE RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .wrapper { padding: 0 16px 48px; }
+
+    /* Header stacks */
+    header {
+      flex-direction: column; align-items: flex-start;
+      gap: 16px; padding: 24px 0 20px; margin-bottom: 24px;
+    }
+    .header-meta { text-align: left; }
+    .logo-title { font-size: 18px; }
+
+    /* Nav scrolls horizontally */
+    .nav-tabs {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      gap: 6px; margin-bottom: 20px;
+      padding-bottom: 4px;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab { padding: 8px 14px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+
+    /* KPI grid: 2 cols on mobile */
+    .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kpi-value { font-size: 22px; }
+    .kpi-card { padding: 16px 14px 14px; }
+
+    /* Segment grid: 2 cols */
+    .segment-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .seg-orders { font-size: 20px; }
+
+    /* Charts stack to single column */
+    .charts-grid { grid-template-columns: 1fr; }
+    .charts-grid-3 { grid-template-columns: 1fr; }
+
+    /* Type split stacks */
+    .type-split { grid-template-columns: 1fr; }
+
+    /* Tables: horizontal scroll */
+    .scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-card { overflow-x: auto; }
+    table { min-width: 520px; }
+    thead th { padding: 8px 12px; }
+    tbody td { padding: 8px 12px; }
+
+    /* Section labels */
+    .section-label { margin-top: 28px; margin-bottom: 12px; }
+
+    /* Footer stacks */
+    footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+
+    /* Password modal fits mobile */
+    .pw-box { width: calc(100vw - 40px); padding: 32px 24px 28px; }
+  }
+
+  @media (max-width: 480px) {
+    /* KPI single column on very small screens */
+    .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .kpi-value { font-size: 20px; }
+    .kpi-sub { font-size: 10px; }
+
+    /* Segment single column */
+    .segment-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Chart canvas height reduction */
+    .chart-canvas-wrap[style*="300px"] { height: 220px !important; }
+    .chart-canvas-wrap[style*="240px"] { height: 200px !important; }
+    .chart-canvas-wrap[style*="200px"] { height: 180px !important; }
+    .chart-canvas-wrap[style*="280px"] { height: 200px !important; }
+
+    /* Customer rows fit small screen */
+    .customer-row { grid-template-columns: 32px 1fr auto; gap: 8px; padding: 9px 12px; }
+    .c-name { font-size: 11px; }
+  }
 
   /* ── PASSWORD GATE ── */
   #dashboard-blur-wrap {
