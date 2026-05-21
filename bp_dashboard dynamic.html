@@ -1,0 +1,2407 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackPegasus — KPI Intelligence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+      :root {
+        --bg: #080b10;
+        --bg2: #0d1117;
+        --bg3: #111820;
+        --surface: #141c27;
+        --surface2: #1a2535;
+        --border: rgba(100, 160, 255, 0.1);
+        --border2: rgba(100, 160, 255, 0.18);
+        --accent: #4f9eff;
+        --accent2: #7cffe0;
+        --accent3: #ff6b4a;
+        --accent4: #ffd166;
+        --text: #e8f0ff;
+        --text2: #8a9ec0;
+        --text3: #4a5e7a;
+        --gold: #ffd166;
+        --font-display: "Syne", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-display);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 600px;
+        background: radial-gradient(
+          ellipse,
+          rgba(79, 158, 255, 0.06) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(79, 158, 255, 0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(79, 158, 255, 0.015) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* FILE PICKER OVERLAY */
+      #file-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .picker-box {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: var(--radius);
+        padding: 40px 48px;
+        text-align: center;
+        max-width: 480px;
+        width: 90%;
+      }
+      .picker-box .logo-hex {
+        margin: 0 auto 20px;
+        width: 56px;
+        height: 56px;
+      }
+      .picker-box .logo-hex svg {
+        width: 56px;
+        height: 56px;
+      }
+      .picker-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+      .picker-sub {
+        font-size: 12px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+      }
+      .pick-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(79, 158, 255, 0.1);
+        border: 1px solid rgba(79, 158, 255, 0.3);
+        color: var(--accent);
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+      }
+      .pick-btn:hover {
+        background: rgba(79, 158, 255, 0.18);
+        border-color: rgba(79, 158, 255, 0.5);
+      }
+      #file-input {
+        display: none;
+      }
+      .pick-hint {
+        font-size: 11px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        margin-top: 16px;
+      }
+
+      /* FILE LIST (multiple files loaded) */
+      #file-list-wrap {
+        margin-top: 24px;
+        width: 100%;
+        display: none;
+      }
+      .file-list-label {
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        margin-bottom: 10px;
+      }
+      .file-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 220px;
+        overflow-y: auto;
+      }
+      .file-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .file-item:hover,
+      .file-item.active {
+        border-color: rgba(79, 158, 255, 0.4);
+        background: rgba(79, 158, 255, 0.06);
+      }
+      .file-item.active {
+        border-color: var(--accent);
+      }
+      .file-item-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .file-item-meta {
+        font-size: 10px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+      }
+      .file-item-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--border);
+        flex-shrink: 0;
+      }
+      .file-item.active .file-item-dot {
+        background: var(--accent);
+      }
+      .load-selected-btn {
+        margin-top: 14px;
+        width: 100%;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      .load-selected-btn:hover {
+        opacity: 0.85;
+      }
+
+      /* ERROR STATE */
+      #parse-error {
+        display: none;
+        margin-top: 14px;
+        padding: 10px 14px;
+        background: rgba(255, 107, 74, 0.1);
+        border: 1px solid rgba(255, 107, 74, 0.3);
+        border-radius: var(--radius-sm);
+        color: var(--accent3);
+        font-size: 11px;
+        font-family: var(--font-mono);
+      }
+
+      /* MAIN DASHBOARD */
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 28px 60px;
+        display: none;
+      }
+
+      /* FILE SWITCHER (in-dashboard) */
+      #file-switcher {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 50;
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 220px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      }
+      #file-switcher.visible {
+        display: flex;
+      }
+      .switcher-label {
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text3);
+        font-family: var(--font-mono);
+      }
+      .switcher-files {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .switcher-file {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.15s;
+        font-size: 11px;
+        color: var(--text2);
+        font-family: var(--font-mono);
+      }
+      .switcher-file:hover {
+        background: rgba(79, 158, 255, 0.06);
+      }
+      .switcher-file.active {
+        color: var(--accent);
+      }
+      .switcher-file .sw-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--border);
+        flex-shrink: 0;
+      }
+      .switcher-file.active .sw-dot {
+        background: var(--accent);
+      }
+      .switcher-add {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 11px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        border: 1px dashed var(--border);
+        margin-top: 2px;
+        transition: all 0.15s;
+      }
+      .switcher-add:hover {
+        border-color: rgba(79, 158, 255, 0.3);
+        color: var(--accent);
+      }
+      #add-file-input {
+        display: none;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 40px 0 32px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+      .logo-block {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .logo-hex {
+        width: 48px;
+        height: 48px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-hex svg {
+        width: 48px;
+        height: 48px;
+      }
+      .logo-title {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--text);
+      }
+      .logo-sub {
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--accent);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: 2px;
+        font-family: var(--font-mono);
+      }
+      .header-meta {
+        text-align: right;
+        font-family: var(--font-mono);
+      }
+      .header-meta .db {
+        font-size: 13px;
+        color: var(--accent2);
+        font-weight: 500;
+      }
+      .header-meta .ts {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 4px;
+      }
+      .live-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent2);
+        margin-right: 6px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .section-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        margin-bottom: 16px;
+        margin-top: 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .kpi-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 20px 18px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        cursor: default;
+      }
+      .kpi-card:hover {
+        border-color: var(--border2);
+        transform: translateY(-2px);
+      }
+      .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--card-accent, var(--accent));
+      }
+      .kpi-label {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        margin-bottom: 10px;
+      }
+      .kpi-value {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .kpi-value span {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--text3);
+      }
+      .kpi-sub {
+        font-size: 11px;
+        color: var(--text2);
+        margin-top: 6px;
+        font-family: var(--font-mono);
+      }
+
+      .charts-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 16px;
+        margin-top: 4px;
+      }
+      .chart-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 22px 18px;
+        position: relative;
+        overflow: hidden;
+      }
+      .chart-card:hover {
+        border-color: var(--border2);
+      }
+      .chart-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+        letter-spacing: -0.2px;
+      }
+      .chart-desc {
+        font-size: 11px;
+        color: var(--text3);
+        margin-bottom: 16px;
+        font-family: var(--font-mono);
+      }
+      .chart-canvas-wrap {
+        position: relative;
+        width: 100%;
+      }
+
+      .table-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .table-card:hover {
+        border-color: var(--border2);
+      }
+      .table-header {
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+      }
+      .table-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .table-count {
+        font-size: 11px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      thead th {
+        padding: 10px 16px;
+        text-align: left;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        font-weight: 500;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg3);
+      }
+      thead th:not(:first-child) {
+        text-align: right;
+      }
+      tbody tr {
+        border-bottom: 1px solid rgba(100, 160, 255, 0.05);
+        transition: background 0.15s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: rgba(79, 158, 255, 0.04);
+      }
+      tbody td {
+        padding: 10px 16px;
+        color: var(--text2);
+        vertical-align: middle;
+      }
+      tbody td:not(:first-child) {
+        text-align: right;
+        font-family: var(--font-mono);
+        font-size: 11px;
+      }
+      .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        background: var(--bg3);
+        color: var(--text3);
+        margin-right: 8px;
+      }
+      .rank-badge.gold {
+        background: rgba(255, 209, 102, 0.15);
+        color: var(--gold);
+      }
+      .rank-badge.silver {
+        background: rgba(138, 158, 192, 0.15);
+        color: #8a9ec0;
+      }
+      .rank-badge.bronze {
+        background: rgba(205, 127, 50, 0.15);
+        color: #cd7f32;
+      }
+      .product-name {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .product-code {
+        color: var(--text3);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        display: block;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      .badge-blue {
+        background: rgba(79, 158, 255, 0.12);
+        color: #79bfff;
+      }
+      .badge-teal {
+        background: rgba(124, 255, 224, 0.1);
+        color: #5ddfc4;
+      }
+      .revenue-bar-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .mini-bar {
+        height: 4px;
+        border-radius: 2px;
+        background: var(--accent);
+        min-width: 2px;
+      }
+
+      .segment-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .segment-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+      }
+      .seg-bucket {
+        font-size: 11px;
+        color: var(--accent);
+        font-family: var(--font-mono);
+        margin-bottom: 6px;
+      }
+      .seg-orders {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .seg-orders span {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text3);
+      }
+      .seg-revenue {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent2);
+        margin-top: 4px;
+      }
+      .seg-bar-wrap {
+        height: 3px;
+        background: var(--border);
+        border-radius: 2px;
+        margin-top: 10px;
+      }
+      .seg-bar {
+        height: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+      }
+
+      .type-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .type-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+      }
+      .type-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+      }
+      .type-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 6px;
+      }
+      .type-stat-label {
+        font-size: 10px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .type-stat-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text);
+        font-family: var(--font-mono);
+      }
+
+      .customer-list {
+      }
+      .customer-row {
+        display: grid;
+        grid-template-columns: 36px 1fr auto;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        border-bottom: 1px solid rgba(100, 160, 255, 0.05);
+        transition: background 0.15s;
+      }
+      .customer-row:last-child {
+        border-bottom: none;
+      }
+      .customer-row:hover {
+        background: rgba(79, 158, 255, 0.03);
+      }
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        font-family: var(--font-mono);
+      }
+      .customer-name-block {
+        min-width: 0;
+      }
+      .c-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .c-orders {
+        font-size: 10px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        margin-top: 1px;
+      }
+      .c-value {
+        text-align: right;
+      }
+      .c-egp {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent2);
+        font-family: var(--font-mono);
+      }
+      .c-avg {
+        font-size: 10px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        margin-top: 1px;
+      }
+
+      footer {
+        margin-top: 56px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      footer .footer-brand {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text3);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      footer .footer-db {
+        font-size: 11px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+      }
+
+      .nav-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 32px;
+      }
+      .nav-tab {
+        padding: 8px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid transparent;
+        color: var(--text3);
+        background: transparent;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+        font-family: var(--font-display);
+      }
+      .nav-tab:hover {
+        color: var(--text2);
+        border-color: var(--border);
+      }
+      .nav-tab.active {
+        color: var(--accent);
+        background: rgba(79, 158, 255, 0.08);
+        border-color: rgba(79, 158, 255, 0.25);
+      }
+
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+      .scroll-wrap {
+        overflow-x: auto;
+      }
+      .divider {
+        height: 16px;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-up {
+        animation: fadeUp 0.4s ease both;
+      }
+      .delay-1 {
+        animation-delay: 0.05s;
+      }
+      .delay-2 {
+        animation-delay: 0.1s;
+      }
+      .delay-3 {
+        animation-delay: 0.15s;
+      }
+      .delay-4 {
+        animation-delay: 0.2s;
+      }
+      .delay-5 {
+        animation-delay: 0.25s;
+      }
+
+      /* PASSWORD OVERLAY */
+      #password-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+      }
+      #password-overlay.hidden {
+        display: none;
+      }
+      #password-overlay ~ #file-overlay,
+      #password-overlay ~ #dashboard {
+        filter: blur(8px);
+        pointer-events: none;
+      }
+      #password-overlay.hidden ~ #file-overlay,
+      #password-overlay.hidden ~ #dashboard {
+        filter: none;
+        pointer-events: auto;
+      }
+      .password-box {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: var(--radius);
+        padding: 40px 48px;
+        text-align: center;
+        max-width: 420px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .password-box .logo-hex {
+        margin: 0 auto 24px;
+        width: 64px;
+        height: 64px;
+      }
+      .password-box .logo-hex svg {
+        width: 64px;
+        height: 64px;
+      }
+      .password-title {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, #4f9eff, #7cffe0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .password-sub {
+        font-size: 12px;
+        color: var(--text3);
+        font-family: var(--font-mono);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 32px;
+      }
+      .password-input-group {
+        margin-bottom: 20px;
+      }
+      .password-input-group input {
+        width: 100%;
+        padding: 14px 16px;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        letter-spacing: 2px;
+        transition: all 0.2s;
+      }
+      .password-input-group input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: rgba(79, 158, 255, 0.05);
+      }
+      .password-input-group input::placeholder {
+        color: var(--text3);
+      }
+      .password-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius-sm);
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+      }
+      .password-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+      .password-btn:active {
+        transform: translateY(0);
+      }
+      .password-error {
+        display: none;
+        margin-top: 12px;
+        padding: 10px;
+        background: rgba(255, 107, 74, 0.1);
+        border: 1px solid rgba(255, 107, 74, 0.3);
+        border-radius: var(--radius-sm);
+        color: var(--accent3);
+        font-size: 11px;
+        font-family: var(--font-mono);
+        animation: shake 0.4s;
+      }
+      .password-error.show {
+        display: block;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-8px);
+        }
+        75% {
+          transform: translateX(8px);
+        }
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .password-loading {
+        display: none;
+        margin-top: 16px;
+        text-align: center;
+      }
+      .password-loading.show {
+        display: block;
+      }
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(79, 158, 255, 0.3);
+        border-top: 2px solid var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+      }
+      .loading-text {
+        display: inline-block;
+        color: var(--text2);
+        font-size: 12px;
+        font-family: var(--font-mono);
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+      <div class="password-box">
+        <div class="logo-hex">
+          <svg
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polygon
+              points="24,3 43,13.5 43,34.5 24,45 5,34.5 5,13.5"
+              fill="rgba(79,158,255,0.08)"
+              stroke="#4F9EFF"
+              stroke-width="1.2"
+            />
+            <polygon
+              points="24,10 37,17.5 37,32.5 24,40 11,32.5 11,17.5"
+              fill="rgba(79,158,255,0.12)"
+              stroke="rgba(79,158,255,0.4)"
+              stroke-width="0.8"
+            />
+            <text
+              x="24"
+              y="29"
+              text-anchor="middle"
+              fill="#4F9EFF"
+              font-family="Syne,sans-serif"
+              font-size="14"
+              font-weight="800"
+            >
+              BP
+            </text>
+          </svg>
+        </div>
+        <div class="password-title">BlackPegasus</div>
+        <div class="password-sub">Secured Dashboard</div>
+        <div class="password-input-group">
+          <input
+            type="password"
+            id="password-input"
+            placeholder="Enter password"
+            onkeypress="if (event.key === 'Enter') verifyPassword();"
+          />
+        </div>
+        <button class="password-btn" onclick="verifyPassword()">
+          Unlock Dashboard →
+        </button>
+        <div class="password-error" id="password-error">
+          Incorrect password. Please try again.
+        </div>
+        <div class="password-loading" id="password-loading">
+          <span class="spinner"></span>
+          <span class="loading-text">Authenticating...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILE PICKER OVERLAY -->
+    <div id="file-overlay">
+      <div class="picker-box">
+        <div class="logo-hex">
+          <svg
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polygon
+              points="24,3 43,13.5 43,34.5 24,45 5,34.5 5,13.5"
+              fill="rgba(79,158,255,0.08)"
+              stroke="#4F9EFF"
+              stroke-width="1.2"
+            />
+            <polygon
+              points="24,10 37,17.5 37,32.5 24,40 11,32.5 11,17.5"
+              fill="rgba(79,158,255,0.12)"
+              stroke="rgba(79,158,255,0.4)"
+              stroke-width="0.8"
+            />
+            <text
+              x="24"
+              y="29"
+              text-anchor="middle"
+              fill="#4F9EFF"
+              font-family="Syne,sans-serif"
+              font-size="14"
+              font-weight="800"
+            >
+              BP
+            </text>
+          </svg>
+        </div>
+        <div class="picker-title">BlackPegasus</div>
+        <div class="picker-sub">KPI Intelligence Dashboard</div>
+        <button
+          class="pick-btn"
+          onclick="document.getElementById('file-input').click()"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          Choose JSON file(s)
+        </button>
+        <input
+          type="file"
+          id="file-input"
+          accept=".json"
+          multiple
+          onchange="handleFileSelect(this.files)"
+        />
+        <div class="pick-hint">Select one or more bp_kpis_*.json exports</div>
+        <div id="parse-error"></div>
+        <div id="file-list-wrap">
+          <div class="file-list-label">Select a file to load</div>
+          <div class="file-list" id="file-list"></div>
+          <button class="load-selected-btn" onclick="loadSelectedFile()">
+            Load Selected File →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div class="wrapper" id="dashboard">
+      <header class="animate-up">
+        <div class="logo-block">
+          <div class="logo-hex">
+            <svg
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polygon
+                points="24,3 43,13.5 43,34.5 24,45 5,34.5 5,13.5"
+                fill="rgba(79,158,255,0.08)"
+                stroke="#4F9EFF"
+                stroke-width="1.2"
+              />
+              <polygon
+                points="24,10 37,17.5 37,32.5 24,40 11,32.5 11,17.5"
+                fill="rgba(79,158,255,0.12)"
+                stroke="rgba(79,158,255,0.4)"
+                stroke-width="0.8"
+              />
+              <text
+                x="24"
+                y="29"
+                text-anchor="middle"
+                fill="#4F9EFF"
+                font-family="Syne,sans-serif"
+                font-size="14"
+                font-weight="800"
+              >
+                BP
+              </text>
+            </svg>
+          </div>
+          <div>
+            <div class="logo-title">BlackPegasus</div>
+            <div class="logo-sub" id="header-subtitle">
+              KPI Intelligence · 2026
+            </div>
+          </div>
+        </div>
+        <div class="header-meta">
+          <div class="db">
+            <span class="live-dot"></span
+            ><span id="header-db">BlackPegasus</span>
+          </div>
+          <div class="ts" id="header-ts">—</div>
+        </div>
+      </header>
+
+      <div class="nav-tabs animate-up delay-1">
+        <button class="nav-tab active" onclick="showPage('overview', event)">
+          Overview
+        </button>
+        <button class="nav-tab" onclick="showPage('products', event)">
+          Products
+        </button>
+        <button class="nav-tab" onclick="showPage('customers', event)">
+          Customers
+        </button>
+        <button class="nav-tab" onclick="showPage('shipping', event)">
+          Shipping
+        </button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div id="page-overview" class="page active">
+        <div class="section-label">Sales summary</div>
+        <div class="kpi-grid animate-up delay-2" id="kpi-sales"></div>
+        <div class="section-label">Order value segments</div>
+        <div class="segment-grid animate-up delay-3" id="kpi-segments"></div>
+        <div class="charts-grid animate-up delay-4" style="margin-top: 16px">
+          <div class="chart-card">
+            <div class="chart-title">Items per Order Distribution</div>
+            <div class="chart-desc">order count by basket size</div>
+            <div class="chart-canvas-wrap" style="height: 240px">
+              <canvas id="itemsChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Revenue by Segment</div>
+            <div class="chart-desc">donut · value bucket share</div>
+            <div class="chart-canvas-wrap" style="height: 240px">
+              <canvas id="segChart"></canvas>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 14px;
+                font-size: 11px;
+                color: var(--text2);
+              "
+              id="seg-legend"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div id="page-products" class="page">
+        <div class="section-label">Product type split</div>
+        <div class="type-split animate-up" id="type-split"></div>
+        <div class="charts-grid animate-up delay-1" style="margin-top: 16px">
+          <div class="chart-card">
+            <div class="chart-title">Revenue by Size Category</div>
+            <div class="chart-desc">top 8 sizes · EGP</div>
+            <div class="chart-canvas-wrap" style="height: 300px">
+              <canvas id="sizeChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Full Size vs Tester</div>
+            <div class="chart-desc">revenue, orders & units comparison</div>
+            <div class="chart-canvas-wrap" style="height: 300px">
+              <canvas id="typeChart"></canvas>
+            </div>
+            <div
+              style="
+                display: flex;
+                gap: 14px;
+                margin-top: 12px;
+                font-size: 11px;
+                color: var(--text2);
+              "
+            >
+              <span style="display: flex; align-items: center; gap: 5px"
+                ><span
+                  style="
+                    width: 9px;
+                    height: 9px;
+                    border-radius: 2px;
+                    background: #4f9eff;
+                    display: inline-block;
+                  "
+                ></span
+                >Full Size</span
+              >
+              <span style="display: flex; align-items: center; gap: 5px"
+                ><span
+                  style="
+                    width: 9px;
+                    height: 9px;
+                    border-radius: 2px;
+                    background: #7cffe0;
+                    display: inline-block;
+                  "
+                ></span
+                >Tester</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="section-label">Top products by revenue</div>
+        <div class="table-card animate-up delay-2">
+          <div class="table-header">
+            <div class="table-title">Revenue Leaders</div>
+            <div class="table-count" id="prod-count-label">—</div>
+          </div>
+          <div class="scroll-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Product</th>
+                  <th>Type</th>
+                  <th>Units</th>
+                  <th>Orders</th>
+                  <th>Avg Price</th>
+                  <th>Revenue</th>
+                </tr>
+              </thead>
+              <tbody id="top-products-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div id="page-customers" class="page">
+        <div class="charts-grid animate-up" style="margin-top: 0">
+          <div class="chart-card">
+            <div class="chart-title">Top Customers by Lifetime Value</div>
+            <div class="chart-desc">total spend · EGP</div>
+            <div class="chart-canvas-wrap" style="height: 340px">
+              <canvas id="custChart"></canvas>
+            </div>
+          </div>
+          <div>
+            <div class="chart-card" style="margin-bottom: 14px">
+              <div class="chart-title">Repeat Customers</div>
+              <div class="chart-desc" id="repeat-chart-desc">—</div>
+              <div class="chart-canvas-wrap" style="height: 160px">
+                <canvas id="repeatChart"></canvas>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 14px;
+                  margin-top: 12px;
+                  font-size: 11px;
+                  color: var(--text2);
+                "
+                id="repeat-legend"
+              ></div>
+            </div>
+            <div
+              class="kpi-card"
+              style="--card-accent: var(--accent4)"
+              id="repeat-rate-card"
+            ></div>
+          </div>
+        </div>
+        <div class="section-label">Repeat customers — full detail</div>
+        <div class="table-card animate-up delay-2">
+          <div class="table-header">
+            <div class="table-title">Loyalty Leaderboard</div>
+            <div class="table-count" id="repeat-count-label">—</div>
+          </div>
+          <div id="repeat-customer-list" class="customer-list"></div>
+        </div>
+      </div>
+
+      <!-- SHIPPING -->
+      <div id="page-shipping" class="page">
+        <div class="kpi-grid animate-up" id="kpi-shipping"></div>
+        <div class="charts-grid animate-up delay-2" style="margin-top: 16px">
+          <div class="chart-card">
+            <div class="chart-title">Orders by Shipping Fee Tier</div>
+            <div class="chart-desc">order volume per fee level</div>
+            <div class="chart-canvas-wrap" style="height: 300px">
+              <canvas id="shipOrdersChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Avg Subtotal by Shipping Fee</div>
+            <div class="chart-desc">order quality per shipping tier</div>
+            <div class="chart-canvas-wrap" style="height: 300px">
+              <canvas id="shipAvgChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="section-label">Shipping breakdown</div>
+        <div class="table-card animate-up delay-3">
+          <div class="table-header">
+            <div class="table-title">Shipping Fee Analysis</div>
+            <div class="table-count" id="ship-tier-label">—</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Fee (EGP)</th>
+                <th>Orders</th>
+                <th>Revenue (EGP)</th>
+                <th>Avg Subtotal (EGP)</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+            <tbody id="shipping-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <footer>
+        <div class="footer-brand">BlackPegasus</div>
+        <div class="footer-db" id="footer-meta">—</div>
+      </footer>
+    </div>
+
+    <!-- FILE SWITCHER (shown when multiple files loaded) -->
+    <div id="file-switcher">
+      <div class="switcher-label">Loaded Files</div>
+      <div class="switcher-files" id="switcher-files"></div>
+      <label
+        class="switcher-add"
+        onclick="document.getElementById('add-file-input').click()"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Add another file
+      </label>
+      <input
+        type="file"
+        id="add-file-input"
+        accept=".json"
+        multiple
+        onchange="addMoreFiles(this.files)"
+      />
+    </div>
+
+    <script>
+      const COLORS = [
+        "#4F9EFF",
+        "#7CFFE0",
+        "#FFD166",
+        "#FF6B4A",
+        "#B67CFF",
+        "#FF9F7C",
+        "#5DD9FF",
+        "#FFB347",
+      ];
+      Chart.defaults.color = "#4A5E7A";
+      Chart.defaults.font.family = "'DM Mono', monospace";
+      Chart.defaults.font.size = 10;
+
+      // ── PASSWORD PROTECTION ────────────────────────────────────────────────────────
+      const CORRECT_PASSWORD = "BlackPegasus2026";
+      let isAuthenticated = false;
+
+      function verifyPassword() {
+        const input = document.getElementById("password-input");
+        const errorEl = document.getElementById("password-error");
+        const loadingEl = document.getElementById("password-loading");
+        const btn = document.querySelector(".password-btn");
+        const password = input.value;
+
+        if (password === CORRECT_PASSWORD) {
+          // Show loading state
+          input.disabled = true;
+          btn.disabled = true;
+          btn.style.opacity = "0.5";
+          btn.style.cursor = "not-allowed";
+          loadingEl.classList.add("show");
+          errorEl.classList.remove("show");
+
+          // Random wait between 3-5 seconds
+          const waitTime = Math.random() * 2000 + 3000; // 3000-5000ms
+
+          setTimeout(() => {
+            isAuthenticated = true;
+            document.getElementById("password-overlay").classList.add("hidden");
+            input.value = "";
+            loadingEl.classList.remove("show");
+            input.disabled = false;
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.style.cursor = "pointer";
+          }, waitTime);
+        } else {
+          input.value = "";
+          errorEl.classList.add("show");
+          input.focus();
+          setTimeout(() => {
+            errorEl.classList.remove("show");
+          }, 3000);
+        }
+      }
+
+      // ── STATE ──────────────────────────────────────────────────────────────────────
+      let loadedFiles = []; // [{name, json}]
+      let activeFileIndex = 0;
+      let DATA = null;
+      let chartInstances = {};
+      let chartsInit = {
+        overview: false,
+        products: false,
+        customers: false,
+        shipping: false,
+      };
+
+      // ── AUTO-LOAD FILES ────────────────────────────────────────────────────────────
+      window.addEventListener("DOMContentLoaded", () => {
+        loadJsonFilesAuto();
+      });
+
+      async function loadJsonFilesAuto() {
+        try {
+          // Try to fetch directory listing - works when served via HTTP server
+          const response = await fetch("./");
+          if (!response.ok) throw new Error("Cannot access directory");
+
+          const html = await response.text();
+
+          // Extract JSON filenames - more flexible pattern
+          // Matches: href="bp_kpis_*.json" or bp_kpis_*.json links
+          const regex =
+            /(?:href=["'])?([^"'>\s]*bp_kpis_[^"'>\s]*\.json)(?:["'])?/gi;
+          const allMatches = [];
+          let match;
+
+          while ((match = regex.exec(html)) !== null) {
+            const filename = match[1].split("/").pop(); // get just the filename
+            if (filename && !allMatches.includes(filename)) {
+              allMatches.push(filename);
+            }
+          }
+
+          console.log("📁 Found files:", allMatches);
+
+          if (allMatches.length > 0) {
+            // Sort by filename (newest first)
+            allMatches.sort().reverse();
+            await loadJsonFiles(allMatches);
+          } else {
+            console.warn("No JSON files found in directory");
+            showOverlay();
+          }
+        } catch (err) {
+          console.warn("Could not auto-discover files:", err.message);
+          showOverlay();
+        }
+      }
+
+      async function loadJsonFiles(fileList) {
+        const results = [];
+
+        for (let i = 0; i < fileList.length; i++) {
+          try {
+            const response = await fetch("./" + fileList[i]);
+            if (!response.ok) throw new Error(`Failed to load ${fileList[i]}`);
+            const json = await response.json();
+            results.push({ name: fileList[i], json });
+            console.log("✓ Loaded:", fileList[i]);
+          } catch (err) {
+            console.error(`✗ Error loading ${fileList[i]}:`, err.message);
+          }
+        }
+
+        console.log("📊 Total files loaded:", results.length);
+
+        if (results.length > 0) {
+          loadedFiles = results;
+          activeFileIndex = 0;
+          renderDashboard();
+        } else {
+          console.error("No files could be loaded");
+          showOverlay();
+        }
+      }
+
+      function showOverlay() {
+        document.getElementById("file-overlay").style.display = "flex";
+        document.getElementById("dashboard").style.display = "none";
+      }
+
+      // ── FILE HANDLING ──────────────────────────────────────────────────────────────
+      function handleFileSelect(files) {
+        const arr = Array.from(files);
+        if (!arr.length) return;
+        hideError();
+
+        if (arr.length === 1) {
+          readFile(arr[0], (name, json) => {
+            loadedFiles = [{ name, json }];
+            activeFileIndex = 0;
+            renderDashboard();
+          });
+        } else {
+          // Multiple — show picker list
+          let pending = arr.length,
+            results = [];
+          arr.forEach((f, i) => {
+            readFile(f, (name, json) => {
+              results[i] = { name, json };
+              pending--;
+              if (pending === 0) {
+                loadedFiles = results;
+                showFilePicker(results);
+              }
+            });
+          });
+        }
+      }
+
+      function addMoreFiles(files) {
+        const arr = Array.from(files);
+        let pending = arr.length;
+        arr.forEach((f) => {
+          readFile(f, (name, json) => {
+            // avoid duplicates
+            if (!loadedFiles.find((x) => x.name === name))
+              loadedFiles.push({ name, json });
+            pending--;
+            if (pending === 0) updateSwitcher();
+          });
+        });
+      }
+
+      function readFile(file, cb) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const json = JSON.parse(e.target.result);
+            cb(file.name, json);
+          } catch (err) {
+            showError('Failed to parse "' + file.name + '": ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function showFilePicker(files) {
+        const list = document.getElementById("file-list");
+        list.innerHTML = "";
+        files.forEach((f, i) => {
+          const el = document.createElement("div");
+          el.className = "file-item" + (i === 0 ? " active" : "");
+          el.dataset.idx = i;
+          el.onclick = () => {
+            document
+              .querySelectorAll(".file-item")
+              .forEach((x) => x.classList.remove("active"));
+            el.classList.add("active");
+            activeFileIndex = i;
+          };
+          const ts = f.json.exported_at
+            ? f.json.exported_at.replace("T", " ").slice(0, 16)
+            : "";
+          el.innerHTML = `<div class="file-item-dot"></div><div><div class="file-item-name">${f.name}</div><div class="file-item-meta">${ts}</div></div>`;
+          list.appendChild(el);
+        });
+        document.getElementById("file-list-wrap").style.display = "block";
+      }
+
+      function loadSelectedFile() {
+        renderDashboard();
+      }
+
+      function renderDashboard() {
+        const file = loadedFiles[activeFileIndex];
+        DATA = mapJson(file.json);
+        if (!DATA) return;
+
+        console.log("🎯 Rendering dashboard with file:", file.name);
+
+        // destroy old charts
+        Object.values(chartInstances).forEach((c) => c && c.destroy());
+        chartInstances = {};
+        chartsInit = {
+          overview: false,
+          products: false,
+          customers: false,
+          shipping: false,
+        };
+
+        // clear dynamic content
+        [
+          "kpi-sales",
+          "kpi-segments",
+          "type-split",
+          "top-products-tbody",
+          "repeat-customer-list",
+          "kpi-shipping",
+          "shipping-tbody",
+        ].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = "";
+        });
+
+        // header
+        document.getElementById("header-db").textContent =
+          (file.json.database || "BlackPegasus") +
+          " · " +
+          (file.json.server || "—");
+        const ts = file.json.exported_at
+          ? file.json.exported_at.replace("T", " ").replace(/\.\d+$/, "")
+          : "—";
+        document.getElementById("header-ts").textContent = "Exported " + ts;
+        document.getElementById("footer-meta").textContent =
+          "db: " +
+          (file.json.database || "—") +
+          " · server: " +
+          (file.json.server || "—") +
+          " · exported: " +
+          ts.slice(0, 10);
+
+        document.getElementById("file-overlay").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+
+        updateSwitcher();
+
+        // init overview (visible by default)
+        chartsInit.overview = true;
+        initOverviewCharts();
+
+        // make sure first tab is active
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.querySelectorAll(".nav-tab")[0].classList.add("active");
+        document.getElementById("page-overview").classList.add("active");
+      }
+
+      // ── JSON MAPPING ───────────────────────────────────────────────────────────────
+      function mapJson(j) {
+        try {
+          const kpi = j.kpis;
+          const ss = kpi.sales_summary.data[0];
+          const shipping = kpi.shipping_analysis.data;
+          const dominantShip = shipping.reduce(
+            (a, b) => (b.order_count > a.order_count ? b : a),
+            shipping[0],
+          );
+          const dominantAvgSub = dominantShip
+            ? shipping.find((s) => s.shipping_fee === dominantShip.shipping_fee)
+                ?.avg_subtotal || 0
+            : 0;
+
+          // type split
+          const typeSplit = kpi.product_type_split.data;
+          const fs =
+            typeSplit.find((t) => t.product_type === "Full Size") || {};
+          const te = typeSplit.find((t) => t.product_type === "Tester") || {};
+
+          // repeat rate
+          const rrRow = kpi.repeat_customer_rate?.data?.[0] || {};
+          const repeatCustomers = kpi.repeat_customers_detail?.data || [];
+          const newCust =
+            (rrRow.total_orders || ss.total_orders) - repeatCustomers.length;
+
+          return {
+            sales: ss,
+            segments: kpi.order_value_segments.data.map((d) => ({
+              bucket: d.order_bucket,
+              count: d.order_count,
+              rev: d.bucket_revenue,
+            })),
+            shipping: shipping.map((d) => ({
+              fee: d.shipping_fee,
+              orders: d.order_count,
+              revenue: d.revenue,
+              avg_sub: d.avg_subtotal,
+            })),
+            items_per_order: kpi.items_per_order.data.map((d) => ({
+              items: d.item_count,
+              orders: d.orders,
+            })),
+            top_products: kpi.top_products_by_revenue.data.map((d) => ({
+              code: d.item_code,
+              name: d.name,
+              type: d.product_type,
+              units: d.units_sold,
+              revenue: d.revenue,
+              orders: d.order_count,
+              avg_price: d.avg_unit_price,
+            })),
+            size_revenue: (kpi.revenue_by_size?.data || [])
+              .slice(0, 8)
+              .map((d) => ({
+                size: d.size,
+                rev: d.revenue,
+              })),
+            top_customers: (kpi.top_customers_by_ltv?.data || [])
+              .slice(0, 15)
+              .map((d) => ({
+                name: d.customer_name,
+                ltv: d.lifetime_value,
+                orders: d.total_orders,
+              })),
+            repeat_customers: repeatCustomers.map((d) => ({
+              phone: d.phone,
+              name: d.customer_name,
+              orders: d.order_count,
+              spent: d.total_spent,
+              avg: d.avg_order_value,
+              last: (d.last_order_date || "").slice(0, 10),
+            })),
+            type_split: { fs, te },
+            repeat_rate: {
+              total: rrRow.total_orders || ss.total_orders,
+              repeat: repeatCustomers.length,
+              newCust,
+            },
+            dominant_ship: dominantShip,
+            dominant_avg_sub: dominantAvgSub,
+          };
+        } catch (e) {
+          showError("Data mapping error: " + e.message);
+          return null;
+        }
+      }
+
+      // ── CHART INIT ─────────────────────────────────────────────────────────────────
+      function initOverviewCharts() {
+        // KPI cards
+        const ss = DATA.sales;
+        const kpiEl = document.getElementById("kpi-sales");
+        kpiEl.innerHTML = `
+    <div class="kpi-card" style="--card-accent:#4F9EFF">
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-value">${fmt(ss.total_revenue)} <span>EGP</span></div>
+      <div class="kpi-sub">subtotal ${fmt(ss.total_subtotal)} + shipping ${fmt(ss.total_shipping)}</div>
+    </div>
+    <div class="kpi-card" style="--card-accent:#7CFFE0">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-value">${ss.total_orders}</div>
+      <div class="kpi-sub">confirmed transactions</div>
+    </div>
+    <div class="kpi-card" style="--card-accent:#FFD166">
+      <div class="kpi-label">Avg Order Value</div>
+      <div class="kpi-value">${fmt(ss.avg_order_value)} <span>EGP</span></div>
+      <div class="kpi-sub">per transaction</div>
+    </div>
+    <div class="kpi-card" style="--card-accent:#FF6B4A">
+      <div class="kpi-label">Min / Max Order</div>
+      <div class="kpi-value">${fmt(ss.min_order)} <span>EGP</span></div>
+      <div class="kpi-sub">max: ${fmt(ss.max_order)} EGP</div>
+    </div>`;
+
+        // Segments
+        const maxSegRev = Math.max(...DATA.segments.map((s) => s.rev));
+        const segEl = document.getElementById("kpi-segments");
+        segEl.innerHTML = DATA.segments
+          .map(
+            (s) => `
+    <div class="segment-card">
+      <div class="seg-bucket">${s.bucket}</div>
+      <div class="seg-orders">${s.count} <span>orders</span></div>
+      <div class="seg-revenue">${fmt(s.rev)} EGP</div>
+      <div class="seg-bar-wrap"><div class="seg-bar" style="width:${Math.round((s.rev / maxSegRev) * 100)}%"></div></div>
+    </div>`,
+          )
+          .join("");
+
+        // Items per order bar
+        const iLabels = DATA.items_per_order.map((d) => d.items + " items");
+        const iData = DATA.items_per_order.map((d) => d.orders);
+        chartInstances.items = new Chart(
+          document.getElementById("itemsChart"),
+          {
+            type: "bar",
+            data: {
+              labels: iLabels,
+              datasets: [
+                {
+                  label: "Orders",
+                  data: iData,
+                  backgroundColor: "#4F9EFF",
+                  borderRadius: 4,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: {
+                  grid: { color: "rgba(100,160,255,0.06)" },
+                  ticks: {
+                    maxRotation: 45,
+                    autoSkip: false,
+                    font: { size: 9 },
+                  },
+                },
+                y: { grid: { color: "rgba(100,160,255,0.06)" } },
+              },
+            },
+          },
+        );
+
+        // Segment donut
+        const segColors = ["#4F9EFF", "#7CFFE0", "#FFD166", "#FF6B4A"];
+        chartInstances.seg = new Chart(document.getElementById("segChart"), {
+          type: "doughnut",
+          data: {
+            labels: DATA.segments.map((d) => d.bucket),
+            datasets: [
+              {
+                data: DATA.segments.map((d) => d.rev),
+                backgroundColor: segColors,
+                borderWidth: 0,
+                hoverOffset: 8,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "65%",
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => " " + ctx.parsed.toLocaleString() + " EGP",
+                },
+              },
+            },
+          },
+        });
+        document.getElementById("seg-legend").innerHTML = DATA.segments
+          .map(
+            (s, i) =>
+              `<span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:${segColors[i]};display:inline-block"></span>${s.bucket}</span>`,
+          )
+          .join("");
+      }
+
+      function initProductCharts() {
+        // Type split cards
+        const { fs, te } = DATA.type_split;
+        document.getElementById("type-split").innerHTML = `
+    <div class="type-card" style="border-top:2px solid var(--accent)">
+      <div class="type-name">Full Size</div>
+      <div class="type-stat"><span class="type-stat-label">Orders</span><span class="type-stat-value">${fs.orders || 0}</span></div>
+      <div class="type-stat"><span class="type-stat-label">Units Sold</span><span class="type-stat-value">${fmt(fs.units_sold || 0)}</span></div>
+      <div class="type-stat"><span class="type-stat-label">Revenue</span><span class="type-stat-value" style="color:var(--accent)">${fmt(fs.total_revenue || 0)} EGP</span></div>
+      <div class="type-stat"><span class="type-stat-label">Avg Price</span><span class="type-stat-value">${fmtD(fs.avg_price || 0)} EGP</span></div>
+    </div>
+    <div class="type-card" style="border-top:2px solid var(--accent2)">
+      <div class="type-name">Tester</div>
+      <div class="type-stat"><span class="type-stat-label">Orders</span><span class="type-stat-value">${te.orders || 0}</span></div>
+      <div class="type-stat"><span class="type-stat-label">Units Sold</span><span class="type-stat-value">${fmt(te.units_sold || 0)}</span></div>
+      <div class="type-stat"><span class="type-stat-label">Revenue</span><span class="type-stat-value" style="color:var(--accent2)">${fmt(te.total_revenue || 0)} EGP</span></div>
+      <div class="type-stat"><span class="type-stat-label">Avg Price</span><span class="type-stat-value">${fmtD(te.avg_price || 0)} EGP</span></div>
+    </div>`;
+
+        // Top products table
+        const tbody = document.getElementById("top-products-tbody");
+        const maxRev = DATA.top_products[0]?.revenue || 1;
+        const topN = Math.min(15, DATA.top_products.length);
+        document.getElementById("prod-count-label").textContent =
+          `Top ${topN} of ${DATA.top_products.length} tracked`;
+        tbody.innerHTML = DATA.top_products
+          .slice(0, topN)
+          .map((p, i) => {
+            const rankClass =
+              i === 0 ? "gold" : i === 1 ? "silver" : i === 2 ? "bronze" : "";
+            const pct = Math.round((p.revenue / maxRev) * 100);
+            return `<tr>
+      <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
+      <td><span class="product-name">${p.name}</span><span class="product-code">${p.code}</span></td>
+      <td><span class="badge ${p.type === "Tester" ? "badge-teal" : "badge-blue"}">${p.type}</span></td>
+      <td>${p.units}</td><td>${p.orders}</td>
+      <td>${fmtD(p.avg_price)}</td>
+      <td><div class="revenue-bar-cell"><div class="mini-bar" style="width:${Math.max(pct, 2)}px"></div>${fmt(p.revenue)}</div></td>
+    </tr>`;
+          })
+          .join("");
+
+        // Size revenue horizontal bar
+        chartInstances.size = new Chart(document.getElementById("sizeChart"), {
+          type: "bar",
+          data: {
+            labels: DATA.size_revenue.map((d) => d.size),
+            datasets: [
+              {
+                label: "Revenue (EGP)",
+                data: DATA.size_revenue.map((d) => d.rev),
+                backgroundColor: COLORS,
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => " " + ctx.parsed.x.toLocaleString() + " EGP",
+                },
+              },
+            },
+            scales: {
+              x: { grid: { color: "rgba(100,160,255,0.06)" } },
+              y: { grid: { display: false }, ticks: { font: { size: 10 } } },
+            },
+          },
+        });
+
+        // Type comparison
+        chartInstances.type = new Chart(document.getElementById("typeChart"), {
+          type: "bar",
+          data: {
+            labels: ["Revenue (÷100)", "Orders", "Units Sold (÷3)"],
+            datasets: [
+              {
+                label: "Full Size",
+                data: [
+                  Math.round((fs.total_revenue || 0) / 100),
+                  fs.orders || 0,
+                  Math.round((fs.units_sold || 0) / 3),
+                ],
+                backgroundColor: "#4F9EFF",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+              {
+                label: "Tester",
+                data: [
+                  Math.round((te.total_revenue || 0) / 100),
+                  te.orders || 0,
+                  Math.round((te.units_sold || 0) / 3),
+                ],
+                backgroundColor: "#7CFFE0",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false } },
+              y: { grid: { color: "rgba(100,160,255,0.06)" } },
+            },
+          },
+        });
+      }
+
+      function initCustomerCharts() {
+        // Top customers bar
+        chartInstances.cust = new Chart(document.getElementById("custChart"), {
+          type: "bar",
+          data: {
+            labels: DATA.top_customers.map((d) =>
+              d.name.length > 18 ? d.name.slice(0, 17) + "…" : d.name,
+            ),
+            datasets: [
+              {
+                label: "Lifetime Value (EGP)",
+                data: DATA.top_customers.map((d) => d.ltv),
+                backgroundColor: "#4F9EFF",
+                borderRadius: 4,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => " " + ctx.parsed.x.toLocaleString() + " EGP",
+                },
+              },
+            },
+            scales: {
+              x: { grid: { color: "rgba(100,160,255,0.06)" } },
+              y: { grid: { display: false }, ticks: { font: { size: 10 } } },
+            },
+          },
+        });
+
+        // Repeat donut
+        const { repeat, newCust } = DATA.repeat_rate;
+        document.getElementById("repeat-chart-desc").textContent =
+          `${repeat} customers with 2+ orders`;
+        chartInstances.repeat = new Chart(
+          document.getElementById("repeatChart"),
+          {
+            type: "doughnut",
+            data: {
+              labels: ["New", "Repeat"],
+              datasets: [
+                {
+                  data: [newCust, repeat],
+                  backgroundColor: ["#4F9EFF", "#FFD166"],
+                  borderWidth: 0,
+                  hoverOffset: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "70%",
+              plugins: { legend: { display: false } },
+            },
+          },
+        );
+        document.getElementById("repeat-legend").innerHTML =
+          `<span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:#4F9EFF;display:inline-block"></span>New (${newCust})</span>` +
+          `<span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:#FFD166;display:inline-block"></span>Repeat (${repeat})</span>`;
+
+        const total = DATA.repeat_rate.total;
+        const rate = total > 0 ? ((repeat / total) * 100).toFixed(1) : "0.0";
+        document.getElementById("repeat-rate-card").innerHTML = `
+    <div class="kpi-label">Repeat Customer Rate</div>
+    <div class="kpi-value">${rate} <span>%</span></div>
+    <div class="kpi-sub">${repeat} of ${total} orders from returning customers</div>`;
+        document.getElementById("repeat-count-label").textContent =
+          `${repeat} customers`;
+
+        // Repeat customer list
+        const avatarColors = [
+          "rgba(79,158,255,0.2)",
+          "rgba(124,255,224,0.2)",
+          "rgba(255,209,102,0.2)",
+          "rgba(255,107,74,0.2)",
+          "rgba(182,124,255,0.2)",
+        ];
+        const avatarText = [
+          "#4F9EFF",
+          "#7CFFE0",
+          "#FFD166",
+          "#FF6B4A",
+          "#B67CFF",
+        ];
+        const list = document.getElementById("repeat-customer-list");
+        list.innerHTML = DATA.repeat_customers
+          .map((c, i) => {
+            const initials =
+              c.name
+                .replace(/[^\u0000-\u007E]/g, "●")
+                .trim()
+                .split(" ")
+                .map((w) => w[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase() || "●●";
+            const ci = i % 5;
+            return `<div class="customer-row">
+      <div class="avatar" style="background:${avatarColors[ci]};color:${avatarText[ci]}">${initials}</div>
+      <div class="customer-name-block">
+        <div class="c-name">${c.name}</div>
+        <div class="c-orders">${c.orders} orders · last ${c.last}</div>
+      </div>
+      <div class="c-value">
+        <div class="c-egp">${fmt(c.spent)} EGP</div>
+        <div class="c-avg">avg ${fmt(c.avg)} EGP</div>
+      </div>
+    </div>`;
+          })
+          .join("");
+      }
+
+      function initShippingCharts() {
+        const ss = DATA.sales;
+        const dom = DATA.dominant_ship;
+        const domShare = dom
+          ? ((dom.order_count / ss.total_orders) * 100).toFixed(1)
+          : "—";
+        document.getElementById("kpi-shipping").innerHTML = `
+    <div class="kpi-card" style="--card-accent:var(--accent)">
+      <div class="kpi-label">Total Shipping Revenue</div>
+      <div class="kpi-value">${fmt(ss.total_shipping)} <span>EGP</span></div>
+      <div class="kpi-sub">across ${ss.total_orders} orders</div>
+    </div>
+    <div class="kpi-card" style="--card-accent:var(--accent2)">
+      <div class="kpi-label">Dominant Fee</div>
+      <div class="kpi-value">${dom ? fmt(dom.shipping_fee) : "—"} <span>EGP</span></div>
+      <div class="kpi-sub">${dom ? dom.order_count : "—"} orders · ${domShare}% of total</div>
+    </div>
+    <div class="kpi-card" style="--card-accent:var(--gold)">
+      <div class="kpi-label">Avg Subtotal at ${dom ? fmt(dom.shipping_fee) : "—"} EGP</div>
+      <div class="kpi-value">${fmt(DATA.dominant_avg_sub)} <span>EGP</span></div>
+      <div class="kpi-sub">the core customer profile</div>
+    </div>`;
+
+        document.getElementById("ship-tier-label").textContent =
+          DATA.shipping.length + " fee tiers";
+
+        const tbody = document.getElementById("shipping-tbody");
+        tbody.innerHTML = DATA.shipping
+          .map((s) => {
+            const share = ((s.orders / ss.total_orders) * 100).toFixed(1);
+            return `<tr>
+      <td style="color:var(--accent);font-family:var(--font-mono);font-weight:600">${s.fee} EGP</td>
+      <td style="text-align:right;font-family:var(--font-mono)">${s.orders}</td>
+      <td style="text-align:right;font-family:var(--font-mono)">${fmt(s.revenue)}</td>
+      <td style="text-align:right;font-family:var(--font-mono)">${fmt(s.avg_sub)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);color:var(--text3)">${share}%</td>
+    </tr>`;
+          })
+          .join("");
+
+        chartInstances.shipOrders = new Chart(
+          document.getElementById("shipOrdersChart"),
+          {
+            type: "bar",
+            data: {
+              labels: DATA.shipping.map((d) => d.fee + " EGP"),
+              datasets: [
+                {
+                  label: "Orders",
+                  data: DATA.shipping.map((d) => d.orders),
+                  backgroundColor: DATA.shipping.map(
+                    (d) => d.fee === dom?.shipping_fee,
+                  )
+                    ? "#4F9EFF"
+                    : "rgba(79,158,255,0.35)",
+                  borderRadius: 4,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: {
+                    maxRotation: 45,
+                    autoSkip: false,
+                    font: { size: 9 },
+                  },
+                },
+                y: { grid: { color: "rgba(100,160,255,0.06)" } },
+              },
+            },
+          },
+        );
+
+        chartInstances.shipAvg = new Chart(
+          document.getElementById("shipAvgChart"),
+          {
+            type: "bar",
+            data: {
+              labels: DATA.shipping.map((d) => d.fee + " EGP"),
+              datasets: [
+                {
+                  label: "Avg Subtotal (EGP)",
+                  data: DATA.shipping.map((d) => Math.round(d.avg_sub)),
+                  backgroundColor: "#7CFFE0",
+                  borderRadius: 4,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) =>
+                      " " + ctx.parsed.y.toLocaleString() + " EGP",
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: {
+                    maxRotation: 45,
+                    autoSkip: false,
+                    font: { size: 9 },
+                  },
+                },
+                y: { grid: { color: "rgba(100,160,255,0.06)" } },
+              },
+            },
+          },
+        );
+      }
+
+      // ── NAV ────────────────────────────────────────────────────────────────────────
+      function showPage(name, event) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById("page-" + name).classList.add("active");
+        if (event) event.currentTarget.classList.add("active");
+        if (!chartsInit[name]) {
+          chartsInit[name] = true;
+          if (name === "products") initProductCharts();
+          if (name === "customers") initCustomerCharts();
+          if (name === "shipping") initShippingCharts();
+        }
+      }
+
+      // ── FILE SWITCHER ──────────────────────────────────────────────────────────────
+      function updateSwitcher() {
+        const sw = document.getElementById("file-switcher");
+        const sfEl = document.getElementById("switcher-files");
+        if (loadedFiles.length <= 1) {
+          sw.classList.remove("visible");
+          return;
+        }
+        sw.classList.add("visible");
+        sfEl.innerHTML = loadedFiles
+          .map(
+            (f, i) => `
+    <div class="switcher-file ${i === activeFileIndex ? "active" : ""}" onclick="switchFile(${i})">
+      <span class="sw-dot"></span>${f.name.replace(/bp_kpis_/, "").replace(/\.json$/, "")}
+    </div>`,
+          )
+          .join("");
+      }
+
+      function switchFile(idx) {
+        activeFileIndex = idx;
+        renderDashboard();
+      }
+
+      // ── HELPERS ────────────────────────────────────────────────────────────────────
+      function fmt(n) {
+        return Math.round(n).toLocaleString();
+      }
+      function fmtD(n) {
+        return Number(n).toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+      }
+      function showError(msg) {
+        const el = document.getElementById("parse-error");
+        el.textContent = msg;
+        el.style.display = "block";
+      }
+      function hideError() {
+        document.getElementById("parse-error").style.display = "none";
+      }
+    </script>
+  </body>
+</html>
