@@ -1,587 +1,1471 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlackPegasus — Analytics Command Center</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --gold:#C9A84C;--gold2:#E8C96A;--gold3:#F5E0A0;--gold4:#8B6914;
-  --black:#08080A;--black2:#0F0F14;--black3:#14141C;--black4:#1C1C28;
-  --gray:#2A2A38;--gray2:#3A3A50;--gray3:#5A5A78;--gray4:#9090B0;
-  --text:#F0E8D0;--text2:#C8B890;--text3:#907858;
-  --danger:#E05050;--success:#50C878;
-}
-html,body{height:100%;background:var(--black);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackPegasus — Analytics Command Center</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --gold: #c9a84c;
+        --gold2: #e8c96a;
+        --gold3: #f5e0a0;
+        --gold4: #8b6914;
+        --black: #08080a;
+        --black2: #0f0f14;
+        --black3: #14141c;
+        --black4: #1c1c28;
+        --gray: #2a2a38;
+        --gray2: #3a3a50;
+        --gray3: #5a5a78;
+        --gray4: #9090b0;
+        --text: #f0e8d0;
+        --text2: #c8b890;
+        --text3: #907858;
+        --danger: #e05050;
+        --success: #50c878;
+      }
+      html,
+      body {
+        height: 100%;
+        background: var(--black);
+        color: var(--text);
+        font-family: "Rajdhani", sans-serif;
+        overflow-x: hidden;
+      }
 
-/* ===== SCAN LINES OVERLAY ===== */
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
-}
+      /* ===== SCAN LINES OVERLAY ===== */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.03) 2px,
+          rgba(0, 0, 0, 0.03) 4px
+        );
+      }
 
-/* ===== GRID PATTERN BG ===== */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);
-  background-size:60px 60px;
-}
+      /* ===== GRID PATTERN BG ===== */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background-image:
+          linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
 
-/* ===== UPLOAD SCREEN ===== */
-#upload-screen{
-  position:fixed;inset:0;z-index:100;background:var(--black);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2rem;
-}
-.upload-logo{font-family:'Orbitron',monospace;font-size:2.4rem;font-weight:900;
-  color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;
-  text-shadow:0 0 40px rgba(201,168,76,0.4);
-}
-.upload-sub{font-size:1rem;color:var(--text3);letter-spacing:0.3em;text-transform:uppercase;margin-top:-1rem}
-.upload-zone{
-  width:520px;max-width:90vw;border:1px solid var(--gold4);border-radius:4px;
-  padding:3rem 2rem;text-align:center;position:relative;cursor:pointer;
-  background:var(--black3);transition:all 0.3s;
-}
-.upload-zone::before,.upload-zone::after{
-  content:'';position:absolute;width:20px;height:20px;border-color:var(--gold);border-style:solid;
-}
-.upload-zone::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
-.upload-zone::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:var(--black4);box-shadow:0 0 30px rgba(201,168,76,0.1)}
-.upload-icon{font-size:3rem;color:var(--gold4);margin-bottom:1rem}
-.upload-zone h3{font-family:'Orbitron',monospace;font-size:1rem;color:var(--gold2);letter-spacing:0.1em;margin-bottom:0.5rem}
-.upload-zone p{color:var(--text3);font-size:0.9rem}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.paste-area{
-  width:520px;max-width:90vw;background:var(--black3);border:1px solid var(--gray);border-radius:4px;padding:1rem;
-}
-.paste-area textarea{
-  width:100%;background:transparent;border:none;color:var(--text2);font-family:'Inter',sans-serif;
-  font-size:0.8rem;resize:vertical;min-height:80px;outline:none;
-}
-.paste-area textarea::placeholder{color:var(--text3)}
-.btn-load{
-  font-family:'Orbitron',monospace;font-size:0.8rem;letter-spacing:0.2em;
-  background:linear-gradient(135deg,var(--gold4),var(--gold));color:var(--black);
-  border:none;padding:0.8rem 2.5rem;cursor:pointer;font-weight:700;
-  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
-  transition:all 0.3s;
-}
-.btn-load:hover{background:linear-gradient(135deg,var(--gold),var(--gold2));transform:translateY(-1px)}
-.upload-error{color:var(--danger);font-size:0.85rem;display:none}
+      /* ===== UPLOAD SCREEN ===== */
+      #upload-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: var(--black);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+      }
+      .upload-logo {
+        font-family: "Orbitron", monospace;
+        font-size: 2.4rem;
+        font-weight: 900;
+        color: var(--gold);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        text-shadow: 0 0 40px rgba(201, 168, 76, 0.4);
+      }
+      .upload-sub {
+        font-size: 1rem;
+        color: var(--text3);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-top: -1rem;
+      }
+      .upload-zone {
+        width: 520px;
+        max-width: 90vw;
+        border: 1px solid var(--gold4);
+        border-radius: 4px;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        background: var(--black3);
+        transition: all 0.3s;
+      }
+      .upload-zone::before,
+      .upload-zone::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-color: var(--gold);
+        border-style: solid;
+      }
+      .upload-zone::before {
+        top: -1px;
+        left: -1px;
+        border-width: 2px 0 0 2px;
+      }
+      .upload-zone::after {
+        bottom: -1px;
+        right: -1px;
+        border-width: 0 2px 2px 0;
+      }
+      .upload-zone:hover,
+      .upload-zone.drag {
+        border-color: var(--gold);
+        background: var(--black4);
+        box-shadow: 0 0 30px rgba(201, 168, 76, 0.1);
+      }
+      .upload-icon {
+        font-size: 3rem;
+        color: var(--gold4);
+        margin-bottom: 1rem;
+      }
+      .upload-zone h3 {
+        font-family: "Orbitron", monospace;
+        font-size: 1rem;
+        color: var(--gold2);
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+      }
+      .upload-zone p {
+        color: var(--text3);
+        font-size: 0.9rem;
+      }
+      .upload-zone input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .paste-area {
+        width: 520px;
+        max-width: 90vw;
+        background: var(--black3);
+        border: 1px solid var(--gray);
+        border-radius: 4px;
+        padding: 1rem;
+      }
+      .paste-area textarea {
+        width: 100%;
+        background: transparent;
+        border: none;
+        color: var(--text2);
+        font-family: "Inter", sans-serif;
+        font-size: 0.8rem;
+        resize: vertical;
+        min-height: 80px;
+        outline: none;
+      }
+      .paste-area textarea::placeholder {
+        color: var(--text3);
+      }
+      .btn-load {
+        font-family: "Orbitron", monospace;
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+        background: linear-gradient(135deg, var(--gold4), var(--gold));
+        color: var(--black);
+        border: none;
+        padding: 0.8rem 2.5rem;
+        cursor: pointer;
+        font-weight: 700;
+        clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+        transition: all 0.3s;
+      }
+      .btn-load:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        transform: translateY(-1px);
+      }
+      .upload-error {
+        color: var(--danger);
+        font-size: 0.85rem;
+        display: none;
+      }
 
-/* ===== MAIN DASHBOARD ===== */
-#dashboard{display:none;position:relative;z-index:1;min-height:100vh}
+      /* ===== MAIN DASHBOARD ===== */
+      #dashboard {
+        display: none;
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+      }
 
-/* ===== HEADER ===== */
-.db-header{
-  background:var(--black2);border-bottom:1px solid var(--gold4);
-  padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:50;
-}
-.db-logo{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:900;color:var(--gold);letter-spacing:0.1em}
-.db-logo span{color:var(--gray4);font-size:0.7rem;display:block;letter-spacing:0.3em;font-weight:400;margin-top:2px}
-.db-meta{display:flex;gap:2rem;align-items:center}
-.meta-item{text-align:right}
-.meta-item .lbl{font-size:0.65rem;color:var(--text3);letter-spacing:0.2em;text-transform:uppercase}
-.meta-item .val{font-size:0.95rem;color:var(--gold2);font-weight:600}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+      /* ===== HEADER ===== */
+      .db-header {
+        background: var(--black2);
+        border-bottom: 1px solid var(--gold4);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .db-logo {
+        font-family: "Orbitron", monospace;
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: var(--gold);
+        letter-spacing: 0.1em;
+      }
+      .db-logo span {
+        color: var(--gray4);
+        font-size: 0.7rem;
+        display: block;
+        letter-spacing: 0.3em;
+        font-weight: 400;
+        margin-top: 2px;
+      }
+      .db-meta {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+      .meta-item {
+        text-align: right;
+      }
+      .meta-item .lbl {
+        font-size: 0.65rem;
+        color: var(--text3);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .meta-item .val {
+        font-size: 0.95rem;
+        color: var(--gold2);
+        font-weight: 600;
+      }
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 8px var(--success);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
 
-/* ===== NAV TABS ===== */
-.db-nav{
-  background:var(--black3);border-bottom:1px solid var(--gray);
-  display:flex;padding:0 2rem;gap:0;overflow-x:auto;
-}
-.nav-tab{
-  font-family:'Orbitron',monospace;font-size:0.7rem;letter-spacing:0.15em;
-  color:var(--gray4);padding:1rem 1.5rem;cursor:pointer;border:none;background:transparent;
-  position:relative;transition:color 0.3s;white-space:nowrap;text-transform:uppercase;
-}
-.nav-tab.active,.nav-tab:hover{color:var(--gold)}
-.nav-tab.active::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-}
+      /* ===== NAV TABS ===== */
+      .db-nav {
+        background: var(--black3);
+        border-bottom: 1px solid var(--gray);
+        display: flex;
+        padding: 0 2rem;
+        gap: 0;
+        overflow-x: auto;
+      }
+      .nav-tab {
+        font-family: "Orbitron", monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        color: var(--gray4);
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        position: relative;
+        transition: color 0.3s;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+      .nav-tab.active,
+      .nav-tab:hover {
+        color: var(--gold);
+      }
+      .nav-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+      }
 
-/* ===== CONTENT ===== */
-.db-content{padding:1.5rem 2rem;display:none}
-.db-content.active{display:block}
+      /* ===== CONTENT ===== */
+      .db-content {
+        padding: 1.5rem 2rem;
+        display: none;
+      }
+      .db-content.active {
+        display: block;
+      }
 
-/* ===== KPI ROW ===== */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--gold4);border:1px solid var(--gold4);border-radius:4px;overflow:hidden;margin-bottom:1.5rem}
-.kpi-card{background:var(--black3);padding:1.2rem 1.5rem;position:relative;overflow:hidden}
-.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.kpi-lbl{font-size:0.65rem;color:var(--text3);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.3rem}
-.kpi-val{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:700;color:var(--gold2)}
-.kpi-sub{font-size:0.75rem;color:var(--gray4);margin-top:0.2rem}
-.kpi-badge{display:inline-block;font-size:0.65rem;padding:2px 8px;border-radius:2px;font-weight:600;margin-top:0.3rem}
-.badge-up{background:rgba(80,200,120,0.15);color:var(--success);border:1px solid rgba(80,200,120,0.3)}
-.badge-dn{background:rgba(224,80,80,0.15);color:var(--danger);border:1px solid rgba(224,80,80,0.3)}
+      /* ===== KPI ROW ===== */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1px;
+        background: var(--gold4);
+        border: 1px solid var(--gold4);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+      .kpi-card {
+        background: var(--black3);
+        padding: 1.2rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+      }
+      .kpi-lbl {
+        font-size: 0.65rem;
+        color: var(--text3);
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        margin-bottom: 0.3rem;
+      }
+      .kpi-val {
+        font-family: "Orbitron", monospace;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--gold2);
+      }
+      .kpi-sub {
+        font-size: 0.75rem;
+        color: var(--gray4);
+        margin-top: 0.2rem;
+      }
+      .kpi-badge {
+        display: inline-block;
+        font-size: 0.65rem;
+        padding: 2px 8px;
+        border-radius: 2px;
+        font-weight: 600;
+        margin-top: 0.3rem;
+      }
+      .badge-up {
+        background: rgba(80, 200, 120, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(80, 200, 120, 0.3);
+      }
+      .badge-dn {
+        background: rgba(224, 80, 80, 0.15);
+        color: var(--danger);
+        border: 1px solid rgba(224, 80, 80, 0.3);
+      }
 
-/* ===== SECTION CARDS ===== */
-.section-grid{display:grid;gap:1.5rem;margin-bottom:1.5rem}
-.section-grid.cols2{grid-template-columns:1fr 1fr}
-.section-grid.cols3{grid-template-columns:1fr 1fr 1fr}
-.section-grid.cols1{grid-template-columns:1fr}
-@media(max-width:900px){.section-grid.cols2,.section-grid.cols3{grid-template-columns:1fr}}
+      /* ===== SECTION CARDS ===== */
+      .section-grid {
+        display: grid;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .section-grid.cols2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .section-grid.cols3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .section-grid.cols1 {
+        grid-template-columns: 1fr;
+      }
+      @media (max-width: 900px) {
+        .section-grid.cols2,
+        .section-grid.cols3 {
+          grid-template-columns: 1fr;
+        }
+      }
 
-.panel{background:var(--black3);border:1px solid var(--gray);border-radius:4px;overflow:hidden;position:relative}
-.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),transparent)}
-.panel-head{
-  padding:1rem 1.2rem 0.8rem;border-bottom:1px solid var(--gray);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.panel-title{font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--gold2);letter-spacing:0.12em;text-transform:uppercase}
-.panel-count{font-size:0.7rem;color:var(--gray4);background:var(--gray);padding:2px 8px;border-radius:2px}
-.panel-body{padding:1rem 1.2rem}
+      .panel {
+        background: var(--black3);
+        border: 1px solid var(--gray);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+      }
+      .panel::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--gold), transparent);
+      }
+      .panel-head {
+        padding: 1rem 1.2rem 0.8rem;
+        border-bottom: 1px solid var(--gray);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .panel-title {
+        font-family: "Orbitron", monospace;
+        font-size: 0.75rem;
+        color: var(--gold2);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .panel-count {
+        font-size: 0.7rem;
+        color: var(--gray4);
+        background: var(--gray);
+        padding: 2px 8px;
+        border-radius: 2px;
+      }
+      .panel-body {
+        padding: 1rem 1.2rem;
+      }
 
-/* ===== TABLE ===== */
-.data-table{width:100%;border-collapse:collapse;font-size:0.82rem}
-.data-table th{
-  font-size:0.62rem;color:var(--text3);letter-spacing:0.2em;text-transform:uppercase;
-  border-bottom:1px solid var(--gray2);padding:0.5rem 0.6rem;text-align:left;font-weight:500;
-}
-.data-table td{padding:0.5rem 0.6rem;border-bottom:1px solid rgba(58,58,80,0.5);color:var(--text2)}
-.data-table tr:last-child td{border-bottom:none}
-.data-table tr:hover td{background:rgba(201,168,76,0.04);color:var(--text)}
-.td-num{text-align:right;font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--gold3)}
-.rank-badge{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:20px;height:20px;border-radius:2px;font-size:0.65rem;font-weight:700;
-  background:var(--gold4);color:var(--gold3);font-family:'Orbitron',monospace;
-}
-.rank-badge.top3{background:linear-gradient(135deg,var(--gold4),var(--gold));color:var(--black)}
+      /* ===== TABLE ===== */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+      .data-table th {
+        font-size: 0.62rem;
+        color: var(--text3);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--gray2);
+        padding: 0.5rem 0.6rem;
+        text-align: left;
+        font-weight: 500;
+      }
+      .data-table td {
+        padding: 0.5rem 0.6rem;
+        border-bottom: 1px solid rgba(58, 58, 80, 0.5);
+        color: var(--text2);
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tr:hover td {
+        background: rgba(201, 168, 76, 0.04);
+        color: var(--text);
+      }
+      .td-num {
+        text-align: right;
+        font-family: "Orbitron", monospace;
+        font-size: 0.75rem;
+        color: var(--gold3);
+      }
+      .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 2px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        background: var(--gold4);
+        color: var(--gold3);
+        font-family: "Orbitron", monospace;
+      }
+      .rank-badge.top3 {
+        background: linear-gradient(135deg, var(--gold4), var(--gold));
+        color: var(--black);
+      }
 
-/* ===== CHART WRAPPER ===== */
-.chart-wrap{position:relative;width:100%}
-.chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text3)}
-.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+      /* ===== CHART WRAPPER ===== */
+      .chart-wrap {
+        position: relative;
+        width: 100%;
+      }
+      .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: var(--text3);
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
 
-/* ===== BAR INLINE ===== */
-.bar-row{display:flex;align-items:center;gap:10px;padding:0.4rem 0;border-bottom:1px solid rgba(58,58,80,0.4)}
-.bar-row:last-child{border-bottom:none}
-.bar-label{flex:0 0 140px;font-size:0.78rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar-track{flex:1;height:6px;background:var(--gray);border-radius:1px;overflow:hidden}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold4),var(--gold));border-radius:1px;transition:width 0.8s ease}
-.bar-val{flex:0 0 90px;text-align:right;font-family:'Orbitron',monospace;font-size:0.72rem;color:var(--gold3)}
+      /* ===== BAR INLINE ===== */
+      .bar-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.4rem 0;
+        border-bottom: 1px solid rgba(58, 58, 80, 0.4);
+      }
+      .bar-row:last-child {
+        border-bottom: none;
+      }
+      .bar-label {
+        flex: 0 0 140px;
+        font-size: 0.78rem;
+        color: var(--text2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .bar-track {
+        flex: 1;
+        height: 6px;
+        background: var(--gray);
+        border-radius: 1px;
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold4), var(--gold));
+        border-radius: 1px;
+        transition: width 0.8s ease;
+      }
+      .bar-val {
+        flex: 0 0 90px;
+        text-align: right;
+        font-family: "Orbitron", monospace;
+        font-size: 0.72rem;
+        color: var(--gold3);
+      }
 
-/* ===== HOUR HEATMAP ===== */
-.heatmap-wrap{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:0.5rem}
-.hm-cell{
-  aspect-ratio:1;border-radius:2px;background:var(--gray);position:relative;cursor:default;
-  transition:opacity 0.3s;
-}
-.hm-cell:hover::after{
-  content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
-  background:var(--black2);border:1px solid var(--gold4);color:var(--gold2);
-  font-size:0.65rem;padding:4px 8px;border-radius:2px;white-space:nowrap;z-index:10;pointer-events:none;
-}
-.hm-labels{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:4px}
-.hm-lbl{font-size:0.55rem;color:var(--gray3);text-align:center;font-family:'Orbitron',monospace}
+      /* ===== HOUR HEATMAP ===== */
+      .heatmap-wrap {
+        display: grid;
+        grid-template-columns: repeat(24, 1fr);
+        gap: 3px;
+        margin-top: 0.5rem;
+      }
+      .hm-cell {
+        aspect-ratio: 1;
+        border-radius: 2px;
+        background: var(--gray);
+        position: relative;
+        cursor: default;
+        transition: opacity 0.3s;
+      }
+      .hm-cell:hover::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--black2);
+        border: 1px solid var(--gold4);
+        color: var(--gold2);
+        font-size: 0.65rem;
+        padding: 4px 8px;
+        border-radius: 2px;
+        white-space: nowrap;
+        z-index: 10;
+        pointer-events: none;
+      }
+      .hm-labels {
+        display: grid;
+        grid-template-columns: repeat(24, 1fr);
+        gap: 3px;
+        margin-top: 4px;
+      }
+      .hm-lbl {
+        font-size: 0.55rem;
+        color: var(--gray3);
+        text-align: center;
+        font-family: "Orbitron", monospace;
+      }
 
-/* ===== DOW CHART ===== */
-.dow-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.dow-col{display:flex;flex-direction:column;align-items:center;gap:4px}
-.dow-bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end;min-height:80px}
-.dow-bar{width:100%;background:linear-gradient(180deg,var(--gold),var(--gold4));border-radius:2px 2px 0 0;min-height:4px;transition:height 0.8s ease}
-.dow-lbl{font-size:0.65rem;color:var(--text3);font-family:'Orbitron',monospace;letter-spacing:0.05em}
-.dow-val{font-size:0.65rem;color:var(--gold3)}
+      /* ===== DOW CHART ===== */
+      .dow-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+      .dow-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .dow-bar-wrap {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        min-height: 80px;
+      }
+      .dow-bar {
+        width: 100%;
+        background: linear-gradient(180deg, var(--gold), var(--gold4));
+        border-radius: 2px 2px 0 0;
+        min-height: 4px;
+        transition: height 0.8s ease;
+      }
+      .dow-lbl {
+        font-size: 0.65rem;
+        color: var(--text3);
+        font-family: "Orbitron", monospace;
+        letter-spacing: 0.05em;
+      }
+      .dow-val {
+        font-size: 0.65rem;
+        color: var(--gold3);
+      }
 
-/* ===== CUSTOMER CARDS ===== */
-.cust-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.cust-card{
-  background:var(--black4);border:1px solid var(--gray);border-radius:4px;
-  padding:0.8rem;position:relative;overflow:hidden;
-}
-.cust-card::after{content:'';position:absolute;top:0;right:0;width:40px;height:40px;
-  background:linear-gradient(225deg,rgba(201,168,76,0.1),transparent)}
-.cust-rank{font-family:'Orbitron',monospace;font-size:0.6rem;color:var(--text3)}
-.cust-name{font-size:0.85rem;color:var(--text);font-weight:600;margin:0.3rem 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cust-ltv{font-family:'Orbitron',monospace;font-size:1.1rem;color:var(--gold2)}
-.cust-orders{font-size:0.72rem;color:var(--gray4);margin-top:0.2rem}
+      /* ===== CUSTOMER CARDS ===== */
+      .cust-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+      }
+      .cust-card {
+        background: var(--black4);
+        border: 1px solid var(--gray);
+        border-radius: 4px;
+        padding: 0.8rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .cust-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(
+          225deg,
+          rgba(201, 168, 76, 0.1),
+          transparent
+        );
+      }
+      .cust-rank {
+        font-family: "Orbitron", monospace;
+        font-size: 0.6rem;
+        color: var(--text3);
+      }
+      .cust-name {
+        font-size: 0.85rem;
+        color: var(--text);
+        font-weight: 600;
+        margin: 0.3rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .cust-ltv {
+        font-family: "Orbitron", monospace;
+        font-size: 1.1rem;
+        color: var(--gold2);
+      }
+      .cust-orders {
+        font-size: 0.72rem;
+        color: var(--gray4);
+        margin-top: 0.2rem;
+      }
 
-/* ===== GEO BARS ===== */
-.geo-map-wrap{position:relative}
+      /* ===== GEO BARS ===== */
+      .geo-map-wrap {
+        position: relative;
+      }
 
-/* ===== FOOTER ===== */
-.db-footer{
-  border-top:1px solid var(--gray);padding:1rem 2rem;
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:0.7rem;color:var(--text3);letter-spacing:0.1em;
-}
-.footer-logo{font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--gold4)}
+      /* ===== FOOTER ===== */
+      .db-footer {
+        border-top: 1px solid var(--gray);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.7rem;
+        color: var(--text3);
+        letter-spacing: 0.1em;
+      }
+      .footer-logo {
+        font-family: "Orbitron", monospace;
+        font-size: 0.75rem;
+        color: var(--gold4);
+      }
 
-/* ===== ANIMATIONS ===== */
-@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.panel,.kpi-card{animation:fadeSlide 0.4s ease both}
-.kpi-card:nth-child(1){animation-delay:0.05s}
-.kpi-card:nth-child(2){animation-delay:0.1s}
-.kpi-card:nth-child(3){animation-delay:0.15s}
-.kpi-card:nth-child(4){animation-delay:0.2s}
-.kpi-card:nth-child(5){animation-delay:0.25s}
-.kpi-card:nth-child(6){animation-delay:0.3s}
+      /* ===== ANIMATIONS ===== */
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .panel,
+      .kpi-card {
+        animation: fadeSlide 0.4s ease both;
+      }
+      .kpi-card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .kpi-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .kpi-card:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .kpi-card:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .kpi-card:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .kpi-card:nth-child(6) {
+        animation-delay: 0.3s;
+      }
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:var(--black2)}
-::-webkit-scrollbar-thumb{background:var(--gold4);border-radius:3px}
+      /* ===== SCROLLBAR ===== */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--black2);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold4);
+        border-radius: 3px;
+      }
 
-/* ===== EMPTY STATE ===== */
-.empty{text-align:center;color:var(--text3);padding:2rem;font-size:0.85rem}
+      /* ===== EMPTY STATE ===== */
+      .empty {
+        text-align: center;
+        color: var(--text3);
+        padding: 2rem;
+        font-size: 0.85rem;
+      }
 
-/* ===== LOADING ===== */
-#loading{
-  position:fixed;inset:0;background:var(--black);z-index:200;
-  display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;
-}
-.loader-logo{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:var(--gold);letter-spacing:0.2em}
-.loader-bar{width:300px;height:2px;background:var(--gray);border-radius:1px;overflow:hidden}
-.loader-fill{height:100%;background:linear-gradient(90deg,var(--gold4),var(--gold));width:0;transition:width 0.5s ease;border-radius:1px}
-.loader-txt{font-size:0.7rem;color:var(--text3);letter-spacing:0.3em;text-transform:uppercase}
+      /* ===== LOADING ===== */
+      #loading {
+        position: fixed;
+        inset: 0;
+        background: var(--black);
+        z-index: 200;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+      .loader-logo {
+        font-family: "Orbitron", monospace;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--gold);
+        letter-spacing: 0.2em;
+      }
+      .loader-bar {
+        width: 300px;
+        height: 2px;
+        background: var(--gray);
+        border-radius: 1px;
+        overflow: hidden;
+      }
+      .loader-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold4), var(--gold));
+        width: 0;
+        transition: width 0.5s ease;
+        border-radius: 1px;
+      }
+      .loader-txt {
+        font-size: 0.7rem;
+        color: var(--text3);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+      }
+      #auth-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 300;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(0, 0, 0, 0.92);
+      }
+      .auth-card {
+        width: 420px;
+        max-width: 100%;
+        padding: 2rem;
+        border-radius: 12px;
+        background: rgba(12, 12, 18, 0.98);
+        border: 1px solid rgba(201, 168, 76, 0.18);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      }
+      .auth-title {
+        font-family: "Orbitron", monospace;
+        font-size: 1.2rem;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        margin-bottom: 0.75rem;
+      }
+      .auth-desc {
+        color: var(--text3);
+        font-size: 0.9rem;
+        margin-bottom: 1.25rem;
+      }
+      .auth-input {
+        width: 100%;
+        padding: 0.95rem 1rem;
+        border-radius: 6px;
+        border: 1px solid var(--gray);
+        background: var(--black2);
+        color: var(--text);
+        font-size: 0.95rem;
+        outline: none;
+        margin-bottom: 1rem;
+      }
+      .auth-input:focus {
+        border-color: var(--gold);
+      }
+      .auth-feedback {
+        min-height: 1.3rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+        color: var(--danger);
+      }
+      .auth-attempts {
+        font-size: 0.75rem;
+        color: var(--text3);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      #dashboard.blurred {
+        filter: blur(8px) saturate(0.7);
+        pointer-events: none;
+        user-select: none;
+      }
 
-/* corner decorations */
-.corner-tl,.corner-tr,.corner-bl,.corner-br{position:fixed;width:60px;height:60px;pointer-events:none;z-index:9998}
-.corner-tl{top:0;left:0;border-top:2px solid var(--gold4);border-left:2px solid var(--gold4)}
-.corner-tr{top:0;right:0;border-top:2px solid var(--gold4);border-right:2px solid var(--gold4)}
-.corner-bl{bottom:0;left:0;border-bottom:2px solid var(--gold4);border-left:2px solid var(--gold4)}
-.corner-br{bottom:0;right:0;border-bottom:2px solid var(--gold4);border-right:2px solid var(--gold4)}
-</style>
-</head>
-<body>
+      /* corner decorations */
+      .corner-tl,
+      .corner-tr,
+      .corner-bl,
+      .corner-br {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+        z-index: 9998;
+      }
+      .corner-tl {
+        top: 0;
+        left: 0;
+        border-top: 2px solid var(--gold4);
+        border-left: 2px solid var(--gold4);
+      }
+      .corner-tr {
+        top: 0;
+        right: 0;
+        border-top: 2px solid var(--gold4);
+        border-right: 2px solid var(--gold4);
+      }
+      .corner-bl {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid var(--gold4);
+        border-left: 2px solid var(--gold4);
+      }
+      .corner-br {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid var(--gold4);
+        border-right: 2px solid var(--gold4);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="corner-tl"></div>
+    <div class="corner-tr"></div>
+    <div class="corner-bl"></div>
+    <div class="corner-br"></div>
 
-<div class="corner-tl"></div><div class="corner-tr"></div>
-<div class="corner-bl"></div><div class="corner-br"></div>
-
-<!-- LOADING -->
-<div id="loading">
-  <div class="loader-logo">BLACKPEGASUS</div>
-  <div class="loader-bar"><div class="loader-fill" id="loader-fill"></div></div>
-  <div class="loader-txt" id="loader-txt">Initializing data systems...</div>
-</div>
-
-<!-- UPLOAD SCREEN -->
-<div id="upload-screen">
-  <div class="upload-logo">BLACKPEGASUS</div>
-  <div class="upload-sub">Analytics Command Center</div>
-  <div class="upload-zone" id="drop-zone">
-    <input type="file" id="file-input" accept=".json">
-    <div class="upload-icon">⬡</div>
-    <h3>Drop JSON Report File</h3>
-    <p>or click to browse — supports BlackPegasus analytics export format</p>
-  </div>
-  <div style="color:var(--text3);font-size:0.75rem;letter-spacing:0.2em">— OR PASTE JSON BELOW —</div>
-  <div class="paste-area">
-    <textarea id="paste-input" placeholder='{ "generated_at": "...", "database": "BlackPegasus", ... }'></textarea>
-  </div>
-  <button class="btn-load" id="btn-load-paste">LOAD DATA</button>
-  <div class="upload-error" id="upload-error">⚠ Invalid JSON — please check the file format</div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard">
-  <header class="db-header">
-    <div>
-      <div class="db-logo">BLACKPEGASUS <span id="db-server-label">Analytics Command Center</span></div>
+    <!-- LOADING -->
+    <div id="loading">
+      <div class="loader-logo">BLACKPEGASUS</div>
+      <div class="loader-bar">
+        <div class="loader-fill" id="loader-fill"></div>
+      </div>
+      <div class="loader-txt" id="loader-txt">Initializing data systems...</div>
     </div>
-    <div class="db-meta">
-      <div class="meta-item"><div class="lbl">Database</div><div class="val" id="hdr-db">—</div></div>
-      <div class="meta-item"><div class="lbl">Server</div><div class="val" id="hdr-srv">—</div></div>
-      <div class="meta-item"><div class="lbl">Generated</div><div class="val" id="hdr-ts">—</div></div>
-      <div class="live-dot" title="Data loaded"></div>
+
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen">
+      <div class="auth-card">
+        <div class="auth-title">BlackPegasus Secure Access</div>
+        <div class="auth-desc">Enter the password to unlock the dashboard.</div>
+        <input
+          id="auth-password"
+          class="auth-input"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+        <button id="auth-submit" class="btn-load">Unlock Dashboard</button>
+        <div id="auth-feedback" class="auth-feedback"></div>
+        <div id="auth-attempts" class="auth-attempts">3 attempts remaining</div>
+      </div>
     </div>
-  </header>
 
-  <nav class="db-nav" id="db-nav"></nav>
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+      <header class="db-header">
+        <div>
+          <div class="db-logo">
+            BLACKPEGASUS
+            <span id="db-server-label">Analytics Command Center</span>
+          </div>
+        </div>
+        <div class="db-meta">
+          <div class="meta-item">
+            <div class="lbl">Database</div>
+            <div class="val" id="hdr-db">—</div>
+          </div>
+          <div class="meta-item">
+            <div class="lbl">Server</div>
+            <div class="val" id="hdr-srv">—</div>
+          </div>
+          <div class="meta-item">
+            <div class="lbl">Generated</div>
+            <div class="val" id="hdr-ts">—</div>
+          </div>
+          <div class="live-dot" title="Data loaded"></div>
+        </div>
+      </header>
 
-  <!-- SALES -->
-  <section class="db-content" id="tab-sales">
-    <div class="kpi-grid" id="sales-kpis"></div>
-    <div class="section-grid cols2" id="sales-charts"></div>
-    <div class="section-grid cols1" id="sales-tables"></div>
-  </section>
+      <nav class="db-nav" id="db-nav"></nav>
 
-  <!-- PRODUCTS -->
-  <section class="db-content" id="tab-products">
-    <div class="section-grid cols1" id="prod-top"></div>
-    <div class="section-grid cols2" id="prod-charts"></div>
-    <div class="section-grid cols1" id="prod-slow"></div>
-  </section>
+      <!-- SALES -->
+      <section class="db-content" id="tab-sales">
+        <div class="kpi-grid" id="sales-kpis"></div>
+        <div class="section-grid cols2" id="sales-charts"></div>
+        <div class="section-grid cols1" id="sales-tables"></div>
+      </section>
 
-  <!-- GEOGRAPHY -->
-  <section class="db-content" id="tab-geography">
-    <div class="section-grid cols1" id="geo-city"></div>
-    <div class="section-grid cols2" id="geo-aov"></div>
-  </section>
+      <!-- PRODUCTS -->
+      <section class="db-content" id="tab-products">
+        <div class="section-grid cols1" id="prod-top"></div>
+        <div class="section-grid cols2" id="prod-charts"></div>
+        <div class="section-grid cols1" id="prod-slow"></div>
+      </section>
 
-  <!-- TIME TRENDS -->
-  <section class="db-content" id="tab-time">
-    <div class="section-grid cols1" id="time-daily"></div>
-    <div class="section-grid cols2" id="time-patterns"></div>
-  </section>
+      <!-- GEOGRAPHY -->
+      <section class="db-content" id="tab-geography">
+        <div class="section-grid cols1" id="geo-city"></div>
+        <div class="section-grid cols2" id="geo-aov"></div>
+      </section>
 
-  <!-- CUSTOMERS -->
-  <section class="db-content" id="tab-customers">
-    <div class="kpi-grid" id="cust-kpis"></div>
-    <div class="section-grid cols1" id="cust-top"></div>
-    <div class="section-grid cols1" id="cust-multi"></div>
-  </section>
+      <!-- TIME TRENDS -->
+      <section class="db-content" id="tab-time">
+        <div class="section-grid cols1" id="time-daily"></div>
+        <div class="section-grid cols2" id="time-patterns"></div>
+      </section>
 
-  <footer class="db-footer">
-    <div class="footer-logo">BLACKPEGASUS</div>
-    <div id="footer-ts">Analytics Command Center — Data Analysis Dashboard</div>
-    <div>BlackPegasus Analytics © 2026</div>
-  </footer>
-</div>
+      <!-- CUSTOMERS -->
+      <section class="db-content" id="tab-customers">
+        <div class="kpi-grid" id="cust-kpis"></div>
+        <div class="section-grid cols1" id="cust-top"></div>
+        <div class="section-grid cols1" id="cust-multi"></div>
+      </section>
 
-<script>
-const $ = id => document.getElementById(id);
-const fmt = {
-  money: v => {
-    const n = parseFloat(v)||0;
-    if(n>=1e6) return '$'+(n/1e6).toFixed(2)+'M';
-    if(n>=1e3) return '$'+(n/1e3).toFixed(1)+'K';
-    return '$'+n.toFixed(2);
-  },
-  num: v => Number(v||0).toLocaleString(),
-  pct: v => (parseFloat(v)||0).toFixed(1)+'%',
-  short: v => {const n=parseFloat(v)||0;if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return Math.round(n).toLocaleString();}
-};
+      <footer class="db-footer">
+        <div class="footer-logo">BLACKPEGASUS</div>
+        <div id="footer-ts">
+          Analytics Command Center — Data Analysis Dashboard
+        </div>
+        <div>BlackPegasus Analytics © 2026</div>
+      </footer>
+    </div>
 
-let CHARTS = [];
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const fmt = {
+        money: (v) => {
+          const n = parseFloat(v) || 0;
+          if (n >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
+          if (n >= 1e3) return "$" + (n / 1e3).toFixed(1) + "K";
+          return "$" + n.toFixed(2);
+        },
+        num: (v) => Number(v || 0).toLocaleString(),
+        pct: (v) => (parseFloat(v) || 0).toFixed(1) + "%",
+        short: (v) => {
+          const n = parseFloat(v) || 0;
+          if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+          if (n >= 1e3) return (n / 1e3).toFixed(0) + "K";
+          return Math.round(n).toLocaleString();
+        },
+      };
 
-// ====== FILE UPLOAD ======
-const dz = $('drop-zone');
-dz.addEventListener('dragover', e=>{e.preventDefault();dz.classList.add('drag')});
-dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
-dz.addEventListener('drop', e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)readFile(f)});
-$('file-input').addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0])});
-$('btn-load-paste').addEventListener('click',()=>{
-  const txt=$('paste-input').value.trim();
-  if(!txt)return;
-  try{initDash(JSON.parse(txt))}catch(e){showErr()}
-});
+      let CHARTS = [];
 
-function readFile(f){
-  const r=new FileReader();
-  r.onload=e=>{try{initDash(JSON.parse(e.target.result))}catch(err){showErr()}};
-  r.readAsText(f);
-}
-function showErr(){$('upload-error').style.display='block'}
+      const DATA_URL =
+        "https://ahmedessam139.github.io/Black-pegasus-data-dashboard/kpi_results.json";
+      const AUTH_PASSWORD = "BlackPegasus2026";
+      const MAX_ATTEMPTS = 3;
+      let authAttempts = 0;
 
-// ====== LOADING SEQUENCE ======
-function showLoading(cb){
-  const ld=$('loading');ld.style.display='flex';
-  $('upload-screen').style.display='none';
-  const fill=$('loader-fill'),txt=$('loader-txt');
-  const steps=[
-    [20,'Parsing data structure...'],
-    [45,'Processing categories...'],
-    [70,'Building visualizations...'],
-    [90,'Rendering dashboard...'],
-    [100,'Complete']
-  ];
-  let i=0;
-  function next(){
-    if(i>=steps.length){setTimeout(()=>{ld.style.display='none';cb();},200);return;}
-    const [pct,msg]=steps[i++];
-    fill.style.width=pct+'%';txt.textContent=msg;
-    setTimeout(next,300);
-  }
-  next();
-}
+      function initAuth() {
+        const authScreen = $("auth-screen");
+        const authInput = $("auth-password");
+        const authBtn = $("auth-submit");
+        if (authScreen) authScreen.style.display = "flex";
+        if (authInput) {
+          authInput.value = "";
+          authInput.focus();
+          authInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleAuth();
+            }
+          });
+        }
+        if (authBtn) authBtn.addEventListener("click", handleAuth);
+        updateAuthAttempts();
+      }
 
-// ====== MAIN INIT ======
-function initDash(data){
-  showLoading(()=>{
-    $('dashboard').style.display='block';
-    buildHeader(data);
-    buildNav();
-    buildSales(data.categories?.sales||[]);
-    buildProducts(data.categories?.products||[]);
-    buildGeo(data.categories?.geography||[]);
-    buildTime(data.categories?.time_trends||[]);
-    buildCustomers(data.categories?.customers||[]);
-    activateTab('sales');
-    setTimeout(animateBars,400);
-  });
-}
+      function handleAuth() {
+        const authInput = $("auth-password");
+        const authBtn = $("auth-submit");
+        const authScreen = $("auth-screen");
+        const authFeedback = $("auth-feedback");
+        if (!authInput || !authBtn || !authScreen || !authFeedback) return;
 
-function buildHeader(d){
-  $('hdr-db').textContent=d.database||'—';
-  $('hdr-srv').textContent=d.server||'—';
-  if(d.generated_at){
-    const dt=new Date(d.generated_at);
-    $('hdr-ts').textContent=dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    $('footer-ts').textContent='Generated: '+dt.toLocaleString();
-  }
-}
+        const value = authInput.value.trim();
+        if (!value) {
+          authFeedback.textContent = "Please enter the password to continue.";
+          authFeedback.style.color = "var(--danger)";
+          return;
+        }
 
-const TABS=[
-  {id:'sales',label:'Sales Overview'},
-  {id:'products',label:'Products'},
-  {id:'geography',label:'Geography'},
-  {id:'time',label:'Time Trends'},
-  {id:'customers',label:'Customers'}
-];
+        authInput.disabled = true;
+        authBtn.disabled = true;
+        authFeedback.style.color = "var(--text2)";
+        authFeedback.textContent = "Authenticating...";
 
-function buildNav(){
-  const nav=$('db-nav');nav.innerHTML='';
-  TABS.forEach(t=>{
-    const btn=document.createElement('button');
-    btn.className='nav-tab';btn.dataset.tab=t.id;btn.textContent=t.label;
-    btn.addEventListener('click',()=>activateTab(t.id));
-    nav.appendChild(btn);
-  });
-}
+        setTimeout(() => {
+          if (value === AUTH_PASSWORD) {
+            authFeedback.textContent = "Access granted. Loading dashboard...";
+            authScreen.style.display = "none";
+            showLoading();
+            fetchData();
+          } else {
+            authAttempts += 1;
+            if (authAttempts >= MAX_ATTEMPTS) {
+              authFeedback.textContent =
+                "Too many incorrect attempts. Access locked.";
+              authFeedback.style.color = "var(--danger)";
+              authInput.disabled = true;
+              authBtn.disabled = true;
+              updateAuthAttempts();
+            } else {
+              authFeedback.textContent =
+                "Password invalid. Try again.";
+              authFeedback.style.color = "var(--danger)";
+              updateAuthAttempts();
+              authInput.disabled = false;
+              authBtn.disabled = false;
+              authInput.value = "";
+              authInput.focus();
+            }
+          }
+        }, 3000);
+      }
 
-function activateTab(id){
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
-  document.querySelectorAll('.db-content').forEach(s=>s.classList.toggle('active',s.id==='tab-'+id));
-  setTimeout(()=>CHARTS.forEach(c=>{try{c.resize()}catch(e){}}),50);
-}
+      function updateAuthAttempts() {
+        const authAttemptsEl = $("auth-attempts");
+        if (!authAttemptsEl) return;
+        const remaining = Math.max(MAX_ATTEMPTS - authAttempts, 0);
+        authAttemptsEl.textContent = `${remaining} attempts remaining`;
+      }
 
-// ====== HELPERS ======
-function getSection(cats,id){return (cats||[]).find(c=>c.id===id)}
-function rows(sec){return sec?.rows||[]}
-function cols(sec){return sec?.columns||[]}
-function cell(row,col){return row[col]??row[Object.keys(row).indexOf(col)]??''}
+      function fetchData() {
+        fetch(DATA_URL, { mode: "cors" })
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Remote data response error " + response.status);
+            return response.json();
+          })
+          .then((data) => {
+            initDash(data);
+            hideLoader();
+          })
+          .catch((err) => showFetchError(err));
+      }
 
-function findCol(sec,hints){
-  const c=cols(sec);
-  for(const h of hints){const f=c.find(x=>x.toLowerCase().includes(h.toLowerCase()));if(f)return f;}
-  return c[0]||'';
-}
+      function hideLoader() {
+        const ld = $("loading");
+        if (ld) ld.style.display = "none";
+      }
 
-function panel(title,count,body,cls=''){
-  return `<div class="panel ${cls}">
+      function showFetchError(err) {
+        const txt = $("loader-txt");
+        const fill = $("loader-fill");
+        if (txt) txt.textContent = "Unable to load remote dashboard data.";
+        if (fill) fill.style.width = "100%";
+        console.error(err);
+      }
+
+      window.addEventListener("load", initAuth);
+
+      // ====== LOADING SEQUENCE ======
+      function showLoading() {
+        const ld = $("loading");
+        if (ld) ld.style.display = "flex";
+        const fill = $("loader-fill"),
+          txt = $("loader-txt");
+        const steps = [
+          [20, "Parsing data structure..."],
+          [45, "Processing categories..."],
+          [70, "Building visualizations..."],
+          [90, "Rendering dashboard..."],
+          [100, "Complete"],
+        ];
+        let i = 0;
+        function next() {
+          if (i >= steps.length) {
+            return;
+          }
+          const [pct, msg] = steps[i++];
+          if (fill) fill.style.width = pct + "%";
+          if (txt) txt.textContent = msg;
+          setTimeout(next, 300);
+        }
+        next();
+      }
+
+      // ====== MAIN INIT ======
+      function initDash(data) {
+        $("dashboard").style.display = "block";
+        buildHeader(data);
+        buildNav();
+        buildSales(data.categories?.sales || []);
+        buildProducts(data.categories?.products || []);
+        buildGeo(data.categories?.geography || []);
+        buildTime(data.categories?.time_trends || []);
+        buildCustomers(data.categories?.customers || []);
+        activateTab("sales");
+        setTimeout(animateBars, 400);
+      }
+
+      function buildHeader(d) {
+        $("hdr-db").textContent = d.database || "—";
+        $("hdr-srv").textContent = d.server || "—";
+        if (d.generated_at) {
+          const dt = new Date(d.generated_at);
+          $("hdr-ts").textContent = dt.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          });
+          $("footer-ts").textContent = "Generated: " + dt.toLocaleString();
+        }
+      }
+
+      const TABS = [
+        { id: "sales", label: "Sales Overview" },
+        { id: "products", label: "Products" },
+        { id: "geography", label: "Geography" },
+        { id: "time", label: "Time Trends" },
+        { id: "customers", label: "Customers" },
+      ];
+
+      function buildNav() {
+        const nav = $("db-nav");
+        nav.innerHTML = "";
+        TABS.forEach((t) => {
+          const btn = document.createElement("button");
+          btn.className = "nav-tab";
+          btn.dataset.tab = t.id;
+          btn.textContent = t.label;
+          btn.addEventListener("click", () => activateTab(t.id));
+          nav.appendChild(btn);
+        });
+      }
+
+      function activateTab(id) {
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach((b) => b.classList.toggle("active", b.dataset.tab === id));
+        document
+          .querySelectorAll(".db-content")
+          .forEach((s) => s.classList.toggle("active", s.id === "tab-" + id));
+        setTimeout(
+          () =>
+            CHARTS.forEach((c) => {
+              try {
+                c.resize();
+              } catch (e) {}
+            }),
+          50,
+        );
+      }
+
+      // ====== HELPERS ======
+      function getSection(cats, id) {
+        return (cats || []).find((c) => c.id === id);
+      }
+      function rows(sec) {
+        return sec?.rows || [];
+      }
+      function cols(sec) {
+        return sec?.columns || [];
+      }
+      function cell(row, col) {
+        return row[col] ?? row[Object.keys(row).indexOf(col)] ?? "";
+      }
+
+      function findCol(sec, hints) {
+        const c = cols(sec);
+        for (const h of hints) {
+          const f = c.find((x) => x.toLowerCase().includes(h.toLowerCase()));
+          if (f) return f;
+        }
+        return c[0] || "";
+      }
+
+      function panel(title, count, body, cls = "") {
+        return `<div class="panel ${cls}">
     <div class="panel-head">
       <div class="panel-title">${title}</div>
-      ${count!==null?`<div class="panel-count">${count} rows</div>`:''}
+      ${count !== null ? `<div class="panel-count">${count} rows</div>` : ""}
     </div>
     <div class="panel-body">${body}</div>
   </div>`;
-}
+      }
 
-function kpiCard(label,value,sub='',badge=''){
-  return `<div class="kpi-card">
+      function kpiCard(label, value, sub = "", badge = "") {
+        return `<div class="kpi-card">
     <div class="kpi-lbl">${label}</div>
     <div class="kpi-val">${value}</div>
-    ${sub?`<div class="kpi-sub">${sub}</div>`:''}
-    ${badge?`<div class="kpi-badge ${badge.cls}">${badge.txt}</div>`:''}
+    ${sub ? `<div class="kpi-sub">${sub}</div>` : ""}
+    ${badge ? `<div class="kpi-badge ${badge.cls}">${badge.txt}</div>` : ""}
   </div>`;
-}
+      }
 
-function barChart(data,labelKey,valKey,fmtFn){
-  if(!data.length)return '<div class="empty">No data</div>';
-  const max=Math.max(...data.map(r=>parseFloat(r[valKey])||0))||1;
-  return data.map(r=>{
-    const v=parseFloat(r[valKey])||0;
-    const pct=(v/max*100).toFixed(1);
-    return `<div class="bar-row">
-      <div class="bar-label" title="${r[labelKey]}">${r[labelKey]||'—'}</div>
+      function barChart(data, labelKey, valKey, fmtFn) {
+        if (!data.length) return '<div class="empty">No data</div>';
+        const max =
+          Math.max(...data.map((r) => parseFloat(r[valKey]) || 0)) || 1;
+        return data
+          .map((r) => {
+            const v = parseFloat(r[valKey]) || 0;
+            const pct = ((v / max) * 100).toFixed(1);
+            return `<div class="bar-row">
+      <div class="bar-label" title="${r[labelKey]}">${r[labelKey] || "—"}</div>
       <div class="bar-track"><div class="bar-fill" style="width:0%" data-w="${pct}%"></div></div>
-      <div class="bar-val">${(fmtFn||fmt.short)(v)}</div>
+      <div class="bar-val">${(fmtFn || fmt.short)(v)}</div>
     </div>`;
-  }).join('');
-}
+          })
+          .join("");
+      }
 
-function dataTable(sec,maxRows,opts={}){
-  const cs=cols(sec),rs=(rows(sec)).slice(0,maxRows||999);
-  if(!rs.length)return '<div class="empty">No data available</div>';
-  const moneyHints=['revenue','amount','price','value','fee','total','ltv'];
-  const isNum=c=>rs.slice(0,5).some(r=>{const v=r[c];return v!==null&&v!==''&&!isNaN(parseFloat(v))});
-  const isMoney=c=>moneyHints.some(h=>c.toLowerCase().includes(h))&&isNum(c);
-  const showCols=opts.cols||cs;
-  const rankCol=opts.rankCol;
-  let html=`<div style="overflow-x:auto"><table class="data-table"><thead><tr>`;
-  if(rankCol)html+=`<th>#</th>`;
-  showCols.forEach(c=>html+=`<th>${c}</th>`);
-  html+=`</tr></thead><tbody>`;
-  rs.forEach((r,i)=>{
-    html+=`<tr>`;
-    if(rankCol)html+=`<td><span class="rank-badge ${i<3?'top3':''}">${i+1}</span></td>`;
-    showCols.forEach(c=>{
-      const v=r[c]??'—';
-      const num=isMoney(c)?fmt.money(v):isNum(c)?fmt.num(v):null;
-      html+=`<td${num!==null?' class="td-num"':''}>${num!==null?num:v}</td>`;
-    });
-    html+=`</tr>`;
-  });
-  html+=`</tbody></table></div>`;
-  return html;
-}
+      function dataTable(sec, maxRows, opts = {}) {
+        const cs = cols(sec),
+          rs = rows(sec).slice(0, maxRows || 999);
+        if (!rs.length) return '<div class="empty">No data available</div>';
+        const moneyHints = [
+          "revenue",
+          "amount",
+          "price",
+          "value",
+          "fee",
+          "total",
+          "ltv",
+        ];
+        const isNum = (c) =>
+          rs.slice(0, 5).some((r) => {
+            const v = r[c];
+            return v !== null && v !== "" && !isNaN(parseFloat(v));
+          });
+        const isMoney = (c) =>
+          moneyHints.some((h) => c.toLowerCase().includes(h)) && isNum(c);
+        const showCols = opts.cols || cs;
+        const rankCol = opts.rankCol;
+        let html = `<div style="overflow-x:auto"><table class="data-table"><thead><tr>`;
+        if (rankCol) html += `<th>#</th>`;
+        showCols.forEach((c) => (html += `<th>${c}</th>`));
+        html += `</tr></thead><tbody>`;
+        rs.forEach((r, i) => {
+          html += `<tr>`;
+          if (rankCol)
+            html += `<td><span class="rank-badge ${i < 3 ? "top3" : ""}">${i + 1}</span></td>`;
+          showCols.forEach((c) => {
+            const v = r[c] ?? "—";
+            const num = isMoney(c)
+              ? fmt.money(v)
+              : isNum(c)
+                ? fmt.num(v)
+                : null;
+            html += `<td${num !== null ? ' class="td-num"' : ""}>${num !== null ? num : v}</td>`;
+          });
+          html += `</tr>`;
+        });
+        html += `</tbody></table></div>`;
+        return html;
+      }
 
-function animateBars(){
-  document.querySelectorAll('.bar-fill').forEach(el=>{
-    el.style.width=el.dataset.w||'0%';
-  });
-}
+      function animateBars() {
+        document.querySelectorAll(".bar-fill").forEach((el) => {
+          el.style.width = el.dataset.w || "0%";
+        });
+      }
 
-// ====== CHART.JS DEFAULTS ======
-const CGOLD='#C9A84C',CGOLD2='#E8C96A',CGRAY='#2A2A38',CGRAY2='#3A3A50',CTEXT='#907858',CTEXT2='#C8B890';
-const chartDefaults={
-  responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{display:false},tooltip:{
-    backgroundColor:'#0F0F14',borderColor:'#8B6914',borderWidth:1,
-    titleColor:'#E8C96A',bodyColor:'#C8B890',padding:10,
-  }},
-  scales:{
-    x:{grid:{color:'rgba(42,42,56,0.8)'},ticks:{color:CTEXT,font:{size:10}}},
-    y:{grid:{color:'rgba(42,42,56,0.8)'},ticks:{color:CTEXT,font:{size:10}}}
-  }
-};
+      // ====== CHART.JS DEFAULTS ======
+      const CGOLD = "#C9A84C",
+        CGOLD2 = "#E8C96A",
+        CGRAY = "#2A2A38",
+        CGRAY2 = "#3A3A50",
+        CTEXT = "#907858",
+        CTEXT2 = "#C8B890";
+      const chartDefaults = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#0F0F14",
+            borderColor: "#8B6914",
+            borderWidth: 1,
+            titleColor: "#E8C96A",
+            bodyColor: "#C8B890",
+            padding: 10,
+          },
+        },
+        scales: {
+          x: {
+            grid: { color: "rgba(42,42,56,0.8)" },
+            ticks: { color: CTEXT, font: { size: 10 } },
+          },
+          y: {
+            grid: { color: "rgba(42,42,56,0.8)" },
+            ticks: { color: CTEXT, font: { size: 10 } },
+          },
+        },
+      };
 
-function mkChart(id,type,labels,datasets,opts={}){
-  const canvas=document.getElementById(id);
-  if(!canvas)return;
-  const c=new Chart(canvas,{type,data:{labels,datasets},options:{...JSON.parse(JSON.stringify(chartDefaults)),...opts}});
-  CHARTS.push(c);return c;
-}
+      function mkChart(id, type, labels, datasets, opts = {}) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return;
+        const c = new Chart(canvas, {
+          type,
+          data: { labels, datasets },
+          options: { ...JSON.parse(JSON.stringify(chartDefaults)), ...opts },
+        });
+        CHARTS.push(c);
+        return c;
+      }
 
-// ====== SALES ======
-function buildSales(cats){
-  const rev=getSection(cats,'revenue');
-  const aov=getSection(cats,'aov');
-  const ship=getSection(cats,'shipping');
-  const items=getSection(cats,'items');
+      // ====== SALES ======
+      function buildSales(cats) {
+        const rev = getSection(cats, "revenue");
+        const aov = getSection(cats, "aov");
+        const ship = getSection(cats, "shipping");
+        const items = getSection(cats, "items");
 
-  // KPIs from revenue
-  let kpiHtml='';
-  if(rev&&rows(rev).length){
-    const r=rows(rev)[0];
-    const rCols=cols(rev);
-    rCols.forEach(c=>{
-      const v=r[c];
-      const isMon=c.toLowerCase().includes('revenue')||c.toLowerCase().includes('amount');
-      const isOrd=c.toLowerCase().includes('order')||c.toLowerCase().includes('count');
-      kpiHtml+=kpiCard(c,isMon?fmt.money(v):isOrd?fmt.num(v):v);
-    });
-  }
-  // from aov
-  if(aov&&rows(aov).length){
-    const totalOrders=rows(aov).reduce((s,r)=>{
-      const oc=findCol(aov,['order_count','orders','count']);
-      return s+(parseFloat(r[oc])||0);},0);
-    if(totalOrders)kpiHtml+=kpiCard('AOV Segments',rows(aov).length,'distinct segments');
-  }
-  $('sales-kpis').innerHTML=kpiHtml||'<div class="empty">No KPI data</div>';
+        // KPIs from revenue
+        let kpiHtml = "";
+        if (rev && rows(rev).length) {
+          const r = rows(rev)[0];
+          const rCols = cols(rev);
+          rCols.forEach((c) => {
+            const v = r[c];
+            const isMon =
+              c.toLowerCase().includes("revenue") ||
+              c.toLowerCase().includes("amount");
+            const isOrd =
+              c.toLowerCase().includes("order") ||
+              c.toLowerCase().includes("count");
+            kpiHtml += kpiCard(
+              c,
+              isMon ? fmt.money(v) : isOrd ? fmt.num(v) : v,
+            );
+          });
+        }
+        // from aov
+        if (aov && rows(aov).length) {
+          const totalOrders = rows(aov).reduce((s, r) => {
+            const oc = findCol(aov, ["order_count", "orders", "count"]);
+            return s + (parseFloat(r[oc]) || 0);
+          }, 0);
+          if (totalOrders)
+            kpiHtml += kpiCard(
+              "AOV Segments",
+              rows(aov).length,
+              "distinct segments",
+            );
+        }
+        $("sales-kpis").innerHTML =
+          kpiHtml || '<div class="empty">No KPI data</div>';
 
-  // AOV chart
-  let chartsHtml='';
-  if(aov&&rows(aov).length){
-    const segCol=findCol(aov,['segment','range','tier','aov','label']);
-    const cntCol=findCol(aov,['order_count','count','orders']);
-    const revCol=findCol(aov,['revenue','amount','total']);
-    const labels=rows(aov).map(r=>String(r[segCol]||'').substring(0,20));
-    const cntData=rows(aov).map(r=>parseFloat(r[cntCol])||0);
-    const revData=rows(aov).map(r=>parseFloat(r[revCol])||0);
-    chartsHtml+=`<div class="panel">
+        // AOV chart
+        let chartsHtml = "";
+        if (aov && rows(aov).length) {
+          const segCol = findCol(aov, [
+            "segment",
+            "range",
+            "tier",
+            "aov",
+            "label",
+          ]);
+          const cntCol = findCol(aov, ["order_count", "count", "orders"]);
+          const revCol = findCol(aov, ["revenue", "amount", "total"]);
+          const labels = rows(aov).map((r) =>
+            String(r[segCol] || "").substring(0, 20),
+          );
+          const cntData = rows(aov).map((r) => parseFloat(r[cntCol]) || 0);
+          const revData = rows(aov).map((r) => parseFloat(r[revCol]) || 0);
+          chartsHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">AOV Segment Distribution</div></div>
       <div class="panel-body">
         <div class="chart-legend">
@@ -590,151 +1474,279 @@ function buildSales(cats){
         </div>
         <div class="chart-wrap" style="height:220px"><canvas id="aov-chart" role="img" aria-label="AOV segments bar chart"></canvas></div>
       </div></div>`;
-    setTimeout(()=>mkChart('aov-chart','bar',labels,[
-      {label:'Order Count',data:cntData,backgroundColor:CGOLD+'99',borderColor:CGOLD,borderWidth:1},
-      {label:'Revenue',data:revData,backgroundColor:CGRAY2+'99',borderColor:CGRAY2,borderWidth:1,yAxisID:'y2'}
-    ],{scales:{...JSON.parse(JSON.stringify(chartDefaults)).scales,y2:{position:'right',grid:{display:false},ticks:{color:CTEXT,font:{size:10},callback:v=>fmt.short(v)}}}}),200);
-  }
+          setTimeout(
+            () =>
+              mkChart(
+                "aov-chart",
+                "bar",
+                labels,
+                [
+                  {
+                    label: "Order Count",
+                    data: cntData,
+                    backgroundColor: CGOLD + "99",
+                    borderColor: CGOLD,
+                    borderWidth: 1,
+                  },
+                  {
+                    label: "Revenue",
+                    data: revData,
+                    backgroundColor: CGRAY2 + "99",
+                    borderColor: CGRAY2,
+                    borderWidth: 1,
+                    yAxisID: "y2",
+                  },
+                ],
+                {
+                  scales: {
+                    ...JSON.parse(JSON.stringify(chartDefaults)).scales,
+                    y2: {
+                      position: "right",
+                      grid: { display: false },
+                      ticks: {
+                        color: CTEXT,
+                        font: { size: 10 },
+                        callback: (v) => fmt.short(v),
+                      },
+                    },
+                  },
+                },
+              ),
+            200,
+          );
+        }
 
-  // Shipping
-  if(ship&&rows(ship).length){
-    const feeCol=findCol(ship,['fee','shipping','range','tier']);
-    const cntCol=findCol(ship,['count','orders','total']);
-    chartsHtml+=`<div class="panel">
+        // Shipping
+        if (ship && rows(ship).length) {
+          const feeCol = findCol(ship, ["fee", "shipping", "range", "tier"]);
+          const cntCol = findCol(ship, ["count", "orders", "total"]);
+          chartsHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">Shipping Fee Distribution</div></div>
       <div class="panel-body">
         <div class="chart-wrap" style="height:220px"><canvas id="ship-chart" role="img" aria-label="Shipping fee analysis"></canvas></div>
       </div></div>`;
-    setTimeout(()=>{
-      const labels=rows(ship).map(r=>String(r[feeCol]||'').substring(0,15));
-      const data=rows(ship).map(r=>parseFloat(r[cntCol])||0);
-      mkChart('ship-chart','doughnut',labels,[{data,backgroundColor:[CGOLD+'CC',CGOLD2+'AA',CGRAY+'AA',CGRAY2+'AA','#3A3A5099','#4A4A6099'],borderColor:'#08080A',borderWidth:2}],
-        {scales:{x:{display:false},y:{display:false}},plugins:{legend:{display:true,position:'right',labels:{color:CTEXT2,font:{size:10},boxWidth:10,padding:8}}}});
-    },200);
-  }
-  $('sales-charts').innerHTML=chartsHtml||'';
+          setTimeout(() => {
+            const labels = rows(ship).map((r) =>
+              String(r[feeCol] || "").substring(0, 15),
+            );
+            const data = rows(ship).map((r) => parseFloat(r[cntCol]) || 0);
+            mkChart(
+              "ship-chart",
+              "doughnut",
+              labels,
+              [
+                {
+                  data,
+                  backgroundColor: [
+                    CGOLD + "CC",
+                    CGOLD2 + "AA",
+                    CGRAY + "AA",
+                    CGRAY2 + "AA",
+                    "#3A3A5099",
+                    "#4A4A6099",
+                  ],
+                  borderColor: "#08080A",
+                  borderWidth: 2,
+                },
+              ],
+              {
+                scales: { x: { display: false }, y: { display: false } },
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: "right",
+                    labels: {
+                      color: CTEXT2,
+                      font: { size: 10 },
+                      boxWidth: 10,
+                      padding: 8,
+                    },
+                  },
+                },
+              },
+            );
+          }, 200);
+        }
+        $("sales-charts").innerHTML = chartsHtml || "";
 
-  // Items table
-  let tabHtml='';
-  if(items&&rows(items).length){
-    tabHtml+=panel('Items Per Order Distribution',rows(items).length,dataTable(items,20));
-  }
-  if(aov&&rows(aov).length){
-    tabHtml+=panel('Average Order Value Segments',rows(aov).length,dataTable(aov,10,{rankCol:true}));
-  }
-  $('sales-tables').innerHTML=tabHtml||'';
-}
+        // Items table
+        let tabHtml = "";
+        if (items && rows(items).length) {
+          tabHtml += panel(
+            "Items Per Order Distribution",
+            rows(items).length,
+            dataTable(items, 20),
+          );
+        }
+        if (aov && rows(aov).length) {
+          tabHtml += panel(
+            "Average Order Value Segments",
+            rows(aov).length,
+            dataTable(aov, 10, { rankCol: true }),
+          );
+        }
+        $("sales-tables").innerHTML = tabHtml || "";
+      }
 
-// ====== PRODUCTS ======
-function buildProducts(cats){
-  const top=getSection(cats,'top');
-  const type=getSection(cats,'type');
-  const size=getSection(cats,'size');
-  const slow=getSection(cats,'slow');
+      // ====== PRODUCTS ======
+      function buildProducts(cats) {
+        const top = getSection(cats, "top");
+        const type = getSection(cats, "type");
+        const size = getSection(cats, "size");
+        const slow = getSection(cats, "slow");
 
-  // Top products table
-  let topHtml='';
-  if(top&&rows(top).length){
-    topHtml=panel('Top 20 Products by Revenue',rows(top).length,dataTable(top,20,{rankCol:true}));
-  }
-  $('prod-top').innerHTML=topHtml||'<div class="panel"><div class="panel-body"><div class="empty">No product data</div></div></div>';
+        // Top products table
+        let topHtml = "";
+        if (top && rows(top).length) {
+          topHtml = panel(
+            "Top 20 Products by Revenue",
+            rows(top).length,
+            dataTable(top, 20, { rankCol: true }),
+          );
+        }
+        $("prod-top").innerHTML =
+          topHtml ||
+          '<div class="panel"><div class="panel-body"><div class="empty">No product data</div></div></div>';
 
-  // Type & Size charts
-  let chartsHtml='';
-  if(type&&rows(type).length){
-    const typeCol=findCol(type,['type','category','is_tester','tester']);
-    const revCol=findCol(type,['revenue','total']);
-    const qtyCol=findCol(type,['qty','quantity','units','sold']);
-    chartsHtml+=`<div class="panel">
+        // Type & Size charts
+        let chartsHtml = "";
+        if (type && rows(type).length) {
+          const typeCol = findCol(type, [
+            "type",
+            "category",
+            "is_tester",
+            "tester",
+          ]);
+          const revCol = findCol(type, ["revenue", "total"]);
+          const qtyCol = findCol(type, ["qty", "quantity", "units", "sold"]);
+          chartsHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">Tester vs Full-Size Performance</div></div>
-      <div class="panel-body">${dataTable(type,10)}</div></div>`;
-  }
-  if(size&&rows(size).length){
-    const sizeCol=findCol(size,['size','bottle','ml','oz']);
-    const revCol=findCol(size,['revenue','total','amount']);
-    chartsHtml+=`<div class="panel">
+      <div class="panel-body">${dataTable(type, 10)}</div></div>`;
+        }
+        if (size && rows(size).length) {
+          const sizeCol = findCol(size, ["size", "bottle", "ml", "oz"]);
+          const revCol = findCol(size, ["revenue", "total", "amount"]);
+          chartsHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">Revenue by Bottle Size</div></div>
       <div class="panel-body">
-        ${barChart(rows(size).slice(0,12),sizeCol,revCol,fmt.money)}
+        ${barChart(rows(size).slice(0, 12), sizeCol, revCol, fmt.money)}
       </div></div>`;
-    setTimeout(animateBars,400);
-  }
-  $('prod-charts').innerHTML=chartsHtml||'';
+          setTimeout(animateBars, 400);
+        }
+        $("prod-charts").innerHTML = chartsHtml || "";
 
-  // Slow movers
-  let slowHtml='';
-  if(slow&&rows(slow).length){
-    slowHtml=panel('⚠ Slow-Moving Products',rows(slow).length,dataTable(slow,20,{rankCol:true}));
-  }
-  $('prod-slow').innerHTML=slowHtml||'';
-}
+        // Slow movers
+        let slowHtml = "";
+        if (slow && rows(slow).length) {
+          slowHtml = panel(
+            "⚠ Slow-Moving Products",
+            rows(slow).length,
+            dataTable(slow, 20, { rankCol: true }),
+          );
+        }
+        $("prod-slow").innerHTML = slowHtml || "";
+      }
 
-// ====== GEOGRAPHY ======
-function buildGeo(cats){
-  const city=getSection(cats,'city');
-  const aovCity=getSection(cats,'aov_city');
-  const cityProd=getSection(cats,'city_products');
+      // ====== GEOGRAPHY ======
+      function buildGeo(cats) {
+        const city = getSection(cats, "city");
+        const aovCity = getSection(cats, "aov_city");
+        const cityProd = getSection(cats, "city_products");
 
-  let cityHtml='';
-  if(city&&rows(city).length){
-    const cityCol=findCol(city,['city','governorate','region','area']);
-    const revCol=findCol(city,['revenue','total','amount']);
-    cityHtml=`<div class="panel">
+        let cityHtml = "";
+        if (city && rows(city).length) {
+          const cityCol = findCol(city, [
+            "city",
+            "governorate",
+            "region",
+            "area",
+          ]);
+          const revCol = findCol(city, ["revenue", "total", "amount"]);
+          cityHtml = `<div class="panel">
       <div class="panel-head"><div class="panel-title">Revenue by City</div><div class="panel-count">${rows(city).length} cities</div></div>
-      <div class="panel-body">${barChart(rows(city).slice(0,20),cityCol,revCol,fmt.money)}</div>
+      <div class="panel-body">${barChart(rows(city).slice(0, 20), cityCol, revCol, fmt.money)}</div>
     </div>`;
-    setTimeout(animateBars,400);
-  }
-  if(cityProd&&rows(cityProd).length){
-    cityHtml+=`<div class="panel" style="margin-top:1.5rem">
+          setTimeout(animateBars, 400);
+        }
+        if (cityProd && rows(cityProd).length) {
+          cityHtml += `<div class="panel" style="margin-top:1.5rem">
       <div class="panel-head"><div class="panel-title">Top Product Per City</div><div class="panel-count">${rows(cityProd).length} cities</div></div>
-      <div class="panel-body">${dataTable(cityProd,20,{rankCol:true})}</div>
+      <div class="panel-body">${dataTable(cityProd, 20, { rankCol: true })}</div>
     </div>`;
-  }
-  $('geo-city').innerHTML=cityHtml||'<div class="empty">No geographic data</div>';
+        }
+        $("geo-city").innerHTML =
+          cityHtml || '<div class="empty">No geographic data</div>';
 
-  let aovHtml='';
-  if(aovCity&&rows(aovCity).length){
-    const cityCol=findCol(aovCity,['city','region']);
-    const aovCol=findCol(aovCity,['aov','average','avg','value']);
-    aovHtml+=`<div class="panel">
+        let aovHtml = "";
+        if (aovCity && rows(aovCity).length) {
+          const cityCol = findCol(aovCity, ["city", "region"]);
+          const aovCol = findCol(aovCity, ["aov", "average", "avg", "value"]);
+          aovHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">AOV by City</div></div>
       <div class="panel-body">
-        <div class="chart-wrap" style="height:${Math.min(rows(aovCity).length,20)*36+60}px">
+        <div class="chart-wrap" style="height:${Math.min(rows(aovCity).length, 20) * 36 + 60}px">
           <canvas id="aov-city-chart" role="img" aria-label="Average order value by city"></canvas>
         </div>
       </div></div>`;
-    setTimeout(()=>{
-      const sorted=[...rows(aovCity)].sort((a,b)=>(parseFloat(b[aovCol])||0)-(parseFloat(a[aovCol])||0)).slice(0,20);
-      mkChart('aov-city-chart','bar',
-        sorted.map(r=>String(r[cityCol]||'').substring(0,20)),
-        [{label:'AOV',data:sorted.map(r=>parseFloat(r[aovCol])||0),backgroundColor:CGOLD+'AA',borderColor:CGOLD,borderWidth:1}],
-        {indexAxis:'y',scales:{x:{grid:{color:'rgba(42,42,56,0.8)'},ticks:{color:CTEXT,callback:v=>fmt.money(v)}},y:{grid:{display:false},ticks:{color:CTEXT2,font:{size:9}}}}});
-    },200);
-    aovHtml+=`<div class="panel">
+          setTimeout(() => {
+            const sorted = [...rows(aovCity)]
+              .sort(
+                (a, b) =>
+                  (parseFloat(b[aovCol]) || 0) - (parseFloat(a[aovCol]) || 0),
+              )
+              .slice(0, 20);
+            mkChart(
+              "aov-city-chart",
+              "bar",
+              sorted.map((r) => String(r[cityCol] || "").substring(0, 20)),
+              [
+                {
+                  label: "AOV",
+                  data: sorted.map((r) => parseFloat(r[aovCol]) || 0),
+                  backgroundColor: CGOLD + "AA",
+                  borderColor: CGOLD,
+                  borderWidth: 1,
+                },
+              ],
+              {
+                indexAxis: "y",
+                scales: {
+                  x: {
+                    grid: { color: "rgba(42,42,56,0.8)" },
+                    ticks: { color: CTEXT, callback: (v) => fmt.money(v) },
+                  },
+                  y: {
+                    grid: { display: false },
+                    ticks: { color: CTEXT2, font: { size: 9 } },
+                  },
+                },
+              },
+            );
+          }, 200);
+          aovHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">AOV Data Table</div></div>
-      <div class="panel-body">${dataTable(aovCity,15,{rankCol:true})}</div>
+      <div class="panel-body">${dataTable(aovCity, 15, { rankCol: true })}</div>
     </div>`;
-  }
-  $('geo-aov').innerHTML=aovHtml||'';
-}
+        }
+        $("geo-aov").innerHTML = aovHtml || "";
+      }
 
-// ====== TIME TRENDS ======
-function buildTime(cats){
-  const daily=getSection(cats,'daily');
-  const weekly=getSection(cats,'weekly');
-  const hour=getSection(cats,'hour');
-  const dow=getSection(cats,'dow');
+      // ====== TIME TRENDS ======
+      function buildTime(cats) {
+        const daily = getSection(cats, "daily");
+        const weekly = getSection(cats, "weekly");
+        const hour = getSection(cats, "hour");
+        const dow = getSection(cats, "dow");
 
-  let dailyHtml='';
-  if(daily&&rows(daily).length){
-    const dateCol=findCol(daily,['date','day','period']);
-    const revCol=findCol(daily,['revenue','total','amount']);
-    const ordCol=findCol(daily,['order','count','orders']);
-    const labels=rows(daily).map(r=>r[dateCol]||'');
-    const revData=rows(daily).map(r=>parseFloat(r[revCol])||0);
-    const ordData=rows(daily).map(r=>parseFloat(r[ordCol])||0);
-    dailyHtml=`<div class="panel">
+        let dailyHtml = "";
+        if (daily && rows(daily).length) {
+          const dateCol = findCol(daily, ["date", "day", "period"]);
+          const revCol = findCol(daily, ["revenue", "total", "amount"]);
+          const ordCol = findCol(daily, ["order", "count", "orders"]);
+          const labels = rows(daily).map((r) => r[dateCol] || "");
+          const revData = rows(daily).map((r) => parseFloat(r[revCol]) || 0);
+          const ordData = rows(daily).map((r) => parseFloat(r[ordCol]) || 0);
+          dailyHtml = `<div class="panel">
       <div class="panel-head"><div class="panel-title">Daily Sales Trend</div><div class="panel-count">${rows(daily).length} days</div></div>
       <div class="panel-body">
         <div class="chart-legend">
@@ -743,43 +1755,141 @@ function buildTime(cats){
         </div>
         <div class="chart-wrap" style="height:240px"><canvas id="daily-chart" role="img" aria-label="Daily revenue trend line chart"></canvas></div>
       </div></div>`;
-    setTimeout(()=>mkChart('daily-chart','line',labels,[
-      {label:'Revenue',data:revData,borderColor:CGOLD,backgroundColor:CGOLD+'22',fill:true,tension:0.4,pointRadius:0,borderWidth:2},
-      {label:'Orders',data:ordData,borderColor:CGRAY2,backgroundColor:'transparent',fill:false,tension:0.4,pointRadius:0,borderWidth:1.5,borderDash:[4,3],yAxisID:'y2'}
-    ],{scales:{...JSON.parse(JSON.stringify(chartDefaults)).scales,x:{...JSON.parse(JSON.stringify(chartDefaults)).scales.x,ticks:{...JSON.parse(JSON.stringify(chartDefaults)).scales.x.ticks,maxTicksLimit:12,maxRotation:45}},y:{grid:{color:'rgba(42,42,56,0.8)'},ticks:{color:CTEXT,callback:v=>fmt.short(v)}},y2:{position:'right',grid:{display:false},ticks:{color:CTEXT,font:{size:9}}}}}),200);
-  }
-  if(weekly&&rows(weekly).length){
-    const wkCol=findCol(weekly,['week','period','date']);
-    const revCol=findCol(weekly,['revenue','total','amount']);
-    const labels=rows(weekly).map(r=>String(r[wkCol]||'').substring(0,10));
-    dailyHtml+=`<div class="panel" style="margin-top:1.5rem">
+          setTimeout(
+            () =>
+              mkChart(
+                "daily-chart",
+                "line",
+                labels,
+                [
+                  {
+                    label: "Revenue",
+                    data: revData,
+                    borderColor: CGOLD,
+                    backgroundColor: CGOLD + "22",
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 2,
+                  },
+                  {
+                    label: "Orders",
+                    data: ordData,
+                    borderColor: CGRAY2,
+                    backgroundColor: "transparent",
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 1.5,
+                    borderDash: [4, 3],
+                    yAxisID: "y2",
+                  },
+                ],
+                {
+                  scales: {
+                    ...JSON.parse(JSON.stringify(chartDefaults)).scales,
+                    x: {
+                      ...JSON.parse(JSON.stringify(chartDefaults)).scales.x,
+                      ticks: {
+                        ...JSON.parse(JSON.stringify(chartDefaults)).scales.x
+                          .ticks,
+                        maxTicksLimit: 12,
+                        maxRotation: 45,
+                      },
+                    },
+                    y: {
+                      grid: { color: "rgba(42,42,56,0.8)" },
+                      ticks: { color: CTEXT, callback: (v) => fmt.short(v) },
+                    },
+                    y2: {
+                      position: "right",
+                      grid: { display: false },
+                      ticks: { color: CTEXT, font: { size: 9 } },
+                    },
+                  },
+                },
+              ),
+            200,
+          );
+        }
+        if (weekly && rows(weekly).length) {
+          const wkCol = findCol(weekly, ["week", "period", "date"]);
+          const revCol = findCol(weekly, ["revenue", "total", "amount"]);
+          const labels = rows(weekly).map((r) =>
+            String(r[wkCol] || "").substring(0, 10),
+          );
+          dailyHtml += `<div class="panel" style="margin-top:1.5rem">
       <div class="panel-head"><div class="panel-title">Weekly Revenue Trend</div><div class="panel-count">${rows(weekly).length} weeks</div></div>
       <div class="panel-body">
         <div class="chart-wrap" style="height:200px"><canvas id="weekly-chart" role="img" aria-label="Weekly revenue trend"></canvas></div>
       </div></div>`;
-    setTimeout(()=>mkChart('weekly-chart','bar',labels,[{label:'Revenue',data:rows(weekly).map(r=>parseFloat(r[revCol])||0),backgroundColor:CGOLD+'88',borderColor:CGOLD,borderWidth:1}],
-      {scales:{x:{grid:{display:false},ticks:{color:CTEXT,font:{size:9},maxRotation:45}},y:{grid:{color:'rgba(42,42,56,0.8)'},ticks:{color:CTEXT,callback:v=>fmt.short(v)}}}}),200);
-  }
-  $('time-daily').innerHTML=dailyHtml||'';
+          setTimeout(
+            () =>
+              mkChart(
+                "weekly-chart",
+                "bar",
+                labels,
+                [
+                  {
+                    label: "Revenue",
+                    data: rows(weekly).map((r) => parseFloat(r[revCol]) || 0),
+                    backgroundColor: CGOLD + "88",
+                    borderColor: CGOLD,
+                    borderWidth: 1,
+                  },
+                ],
+                {
+                  scales: {
+                    x: {
+                      grid: { display: false },
+                      ticks: {
+                        color: CTEXT,
+                        font: { size: 9 },
+                        maxRotation: 45,
+                      },
+                    },
+                    y: {
+                      grid: { color: "rgba(42,42,56,0.8)" },
+                      ticks: { color: CTEXT, callback: (v) => fmt.short(v) },
+                    },
+                  },
+                },
+              ),
+            200,
+          );
+        }
+        $("time-daily").innerHTML = dailyHtml || "";
 
-  let patternsHtml='';
-  // Hour heatmap
-  if(hour&&rows(hour).length){
-    const hrCol=findCol(hour,['hour','hr','time']);
-    const ordCol=findCol(hour,['order','count','orders','total']);
-    const data=rows(hour).sort((a,b)=>(parseInt(a[hrCol])||0)-(parseInt(b[hrCol])||0));
-    const maxOrd=Math.max(...data.map(r=>parseFloat(r[ordCol])||0))||1;
-    let cells=data.map(r=>{
-      const hr=parseInt(r[hrCol])||0;
-      const v=parseFloat(r[ordCol])||0;
-      const intensity=v/maxOrd;
-      const alpha=Math.round(intensity*200+30);
-      const bg=`rgba(201,168,76,${(intensity*0.85+0.05).toFixed(2)})`;
-      const lbl=`${hr.toString().padStart(2,'0')}:00 — ${fmt.num(v)} orders`;
-      return `<div class="hm-cell" style="background:${bg}" data-tip="${lbl}"></div>`;
-    }).join('');
-    const lbls=data.map(r=>{const h=parseInt(r[hrCol])||0;return h%3===0?`<div class="hm-lbl">${h}</div>`:`<div class="hm-lbl"></div>`;}).join('');
-    patternsHtml+=`<div class="panel">
+        let patternsHtml = "";
+        // Hour heatmap
+        if (hour && rows(hour).length) {
+          const hrCol = findCol(hour, ["hour", "hr", "time"]);
+          const ordCol = findCol(hour, ["order", "count", "orders", "total"]);
+          const data = rows(hour).sort(
+            (a, b) => (parseInt(a[hrCol]) || 0) - (parseInt(b[hrCol]) || 0),
+          );
+          const maxOrd =
+            Math.max(...data.map((r) => parseFloat(r[ordCol]) || 0)) || 1;
+          let cells = data
+            .map((r) => {
+              const hr = parseInt(r[hrCol]) || 0;
+              const v = parseFloat(r[ordCol]) || 0;
+              const intensity = v / maxOrd;
+              const alpha = Math.round(intensity * 200 + 30);
+              const bg = `rgba(201,168,76,${(intensity * 0.85 + 0.05).toFixed(2)})`;
+              const lbl = `${hr.toString().padStart(2, "0")}:00 — ${fmt.num(v)} orders`;
+              return `<div class="hm-cell" style="background:${bg}" data-tip="${lbl}"></div>`;
+            })
+            .join("");
+          const lbls = data
+            .map((r) => {
+              const h = parseInt(r[hrCol]) || 0;
+              return h % 3 === 0
+                ? `<div class="hm-lbl">${h}</div>`
+                : `<div class="hm-lbl"></div>`;
+            })
+            .join("");
+          patternsHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">Orders by Hour of Day</div></div>
       <div class="panel-body">
         <div class="heatmap-wrap">${cells}</div>
@@ -788,86 +1898,131 @@ function buildTime(cats){
           <span>Low Activity</span><span style="color:var(--gold)">■■■■■</span><span>High Activity</span>
         </div>
       </div></div>`;
-  }
+        }
 
-  // DOW bars
-  if(dow&&rows(dow).length){
-    const dayCol=findCol(dow,['day','dow','weekday','name']);
-    const revCol=findCol(dow,['revenue','total','amount']);
-    const ordCol=findCol(dow,['order','count','orders']);
-    const DAY_NAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    const sorted=[...rows(dow)].sort((a,b)=>{
-      const na=DAY_NAMES.findIndex(d=>String(a[dayCol]).toLowerCase().includes(d.toLowerCase()));
-      const nb=DAY_NAMES.findIndex(d=>String(b[dayCol]).toLowerCase().includes(d.toLowerCase()));
-      return na-nb;
-    });
-    const maxRev=Math.max(...sorted.map(r=>parseFloat(r[revCol])||0))||1;
-    let dowCols=sorted.map(r=>{
-      const v=parseFloat(r[revCol])||0;
-      const pct=(v/maxRev*100).toFixed(0);
-      const name=String(r[dayCol]).substring(0,3);
-      return `<div class="dow-col">
+        // DOW bars
+        if (dow && rows(dow).length) {
+          const dayCol = findCol(dow, ["day", "dow", "weekday", "name"]);
+          const revCol = findCol(dow, ["revenue", "total", "amount"]);
+          const ordCol = findCol(dow, ["order", "count", "orders"]);
+          const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+          const sorted = [...rows(dow)].sort((a, b) => {
+            const na = DAY_NAMES.findIndex((d) =>
+              String(a[dayCol]).toLowerCase().includes(d.toLowerCase()),
+            );
+            const nb = DAY_NAMES.findIndex((d) =>
+              String(b[dayCol]).toLowerCase().includes(d.toLowerCase()),
+            );
+            return na - nb;
+          });
+          const maxRev =
+            Math.max(...sorted.map((r) => parseFloat(r[revCol]) || 0)) || 1;
+          let dowCols = sorted
+            .map((r) => {
+              const v = parseFloat(r[revCol]) || 0;
+              const pct = ((v / maxRev) * 100).toFixed(0);
+              const name = String(r[dayCol]).substring(0, 3);
+              return `<div class="dow-col">
         <div class="dow-val">${fmt.short(v)}</div>
         <div class="dow-bar-wrap"><div class="dow-bar" style="height:${pct}%"></div></div>
         <div class="dow-lbl">${name}</div>
       </div>`;
-    }).join('');
-    patternsHtml+=`<div class="panel">
+            })
+            .join("");
+          patternsHtml += `<div class="panel">
       <div class="panel-head"><div class="panel-title">Day of Week Pattern</div></div>
       <div class="panel-body"><div class="dow-grid">${dowCols}</div></div>
     </div>`;
-  }
-  $('time-patterns').innerHTML=patternsHtml||'';
-}
+        }
+        $("time-patterns").innerHTML = patternsHtml || "";
+      }
 
-// ====== CUSTOMERS ======
-function buildCustomers(cats){
-  const repeat=getSection(cats,'repeat');
-  const topCust=getSection(cats,'top_customers');
-  const multi=getSection(cats,'multi_order');
+      // ====== CUSTOMERS ======
+      function buildCustomers(cats) {
+        const repeat = getSection(cats, "repeat");
+        const topCust = getSection(cats, "top_customers");
+        const multi = getSection(cats, "multi_order");
 
-  // KPIs
-  let kpiHtml='';
-  if(repeat&&rows(repeat).length){
-    const r=rows(repeat)[0];
-    const cs=cols(repeat);
-    cs.forEach(c=>{
-      const v=r[c];
-      const isPct=c.toLowerCase().includes('rate')||c.toLowerCase().includes('pct')||c.toLowerCase().includes('percent');
-      const isMon=c.toLowerCase().includes('revenue')||c.toLowerCase().includes('amount');
-      kpiHtml+=kpiCard(c,isPct?fmt.pct(v):isMon?fmt.money(v):fmt.num(v));
-    });
-  }
-  if(topCust)kpiHtml+=kpiCard('Top Customers',rows(topCust).length,'by lifetime value');
-  if(multi)kpiHtml+=kpiCard('Multi-Order Customers',rows(multi).length,'repeat buyers');
-  $('cust-kpis').innerHTML=kpiHtml||'';
+        // KPIs
+        let kpiHtml = "";
+        if (repeat && rows(repeat).length) {
+          const r = rows(repeat)[0];
+          const cs = cols(repeat);
+          cs.forEach((c) => {
+            const v = r[c];
+            const isPct =
+              c.toLowerCase().includes("rate") ||
+              c.toLowerCase().includes("pct") ||
+              c.toLowerCase().includes("percent");
+            const isMon =
+              c.toLowerCase().includes("revenue") ||
+              c.toLowerCase().includes("amount");
+            kpiHtml += kpiCard(
+              c,
+              isPct ? fmt.pct(v) : isMon ? fmt.money(v) : fmt.num(v),
+            );
+          });
+        }
+        if (topCust)
+          kpiHtml += kpiCard(
+            "Top Customers",
+            rows(topCust).length,
+            "by lifetime value",
+          );
+        if (multi)
+          kpiHtml += kpiCard(
+            "Multi-Order Customers",
+            rows(multi).length,
+            "repeat buyers",
+          );
+        $("cust-kpis").innerHTML = kpiHtml || "";
 
-  // Top customers grid
-  let topHtml='';
-  if(topCust&&rows(topCust).length){
-    const nameCol=findCol(topCust,['name','customer','client','email']);
-    const ltvCol=findCol(topCust,['ltv','lifetime','revenue','total','amount','value']);
-    const ordCol=findCol(topCust,['order','count','orders']);
-    const cards=rows(topCust).map((r,i)=>`<div class="cust-card">
-      <div class="cust-rank">#${i+1}</div>
-      <div class="cust-name" title="${r[nameCol]||'—'}">${r[nameCol]||'—'}</div>
+        // Top customers grid
+        let topHtml = "";
+        if (topCust && rows(topCust).length) {
+          const nameCol = findCol(topCust, [
+            "name",
+            "customer",
+            "client",
+            "email",
+          ]);
+          const ltvCol = findCol(topCust, [
+            "ltv",
+            "lifetime",
+            "revenue",
+            "total",
+            "amount",
+            "value",
+          ]);
+          const ordCol = findCol(topCust, ["order", "count", "orders"]);
+          const cards = rows(topCust)
+            .map(
+              (r, i) => `<div class="cust-card">
+      <div class="cust-rank">#${i + 1}</div>
+      <div class="cust-name" title="${r[nameCol] || "—"}">${r[nameCol] || "—"}</div>
       <div class="cust-ltv">${fmt.money(r[ltvCol])}</div>
-      <div class="cust-orders">${r[ordCol]||0} orders</div>
-    </div>`).join('');
-    topHtml=`<div class="panel">
+      <div class="cust-orders">${r[ordCol] || 0} orders</div>
+    </div>`,
+            )
+            .join("");
+          topHtml = `<div class="panel">
       <div class="panel-head"><div class="panel-title">Top 20 Customers by Lifetime Value</div><div class="panel-count">${rows(topCust).length}</div></div>
       <div class="panel-body"><div class="cust-grid">${cards}</div></div>
     </div>`;
-  }
-  $('cust-top').innerHTML=topHtml||'';
+        }
+        $("cust-top").innerHTML = topHtml || "";
 
-  // Multi-order table
-  let multiHtml='';
-  if(multi&&rows(multi).length){
-    multiHtml=panel('Multi-Order Customers Detail',rows(multi).length,dataTable(multi,30,{rankCol:true}));
-  }
-  $('cust-multi').innerHTML=multiHtml||'';
-}
-</script>
-</body>
+        // Multi-order table
+        let multiHtml = "";
+        if (multi && rows(multi).length) {
+          multiHtml = panel(
+            "Multi-Order Customers Detail",
+            rows(multi).length,
+            dataTable(multi, 30, { rankCol: true }),
+          );
+        }
+        $("cust-multi").innerHTML = multiHtml || "";
+      }
+    </script>
+  </body>
 </html>
