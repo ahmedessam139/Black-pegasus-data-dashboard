@@ -1,0 +1,2966 @@
+{
+  "generated_at": "2026-05-22T19:47:33.726384",
+  "database": "BlackPegasus",
+  "server": "EGLAESAM11",
+  "categories": {
+    "sales": [
+      {
+        "id": "revenue",
+        "title": "Total Revenue & Order Count",
+        "columns": [
+          "total_orders",
+          "total_revenue",
+          "total_subtotal",
+          "total_shipping",
+          "avg_order_value",
+          "min_order",
+          "max_order"
+        ],
+        "row_count": 1,
+        "rows": [
+          {
+            "total_orders": 218,
+            "total_revenue": 397910.0,
+            "total_subtotal": 374260.0,
+            "total_shipping": 23610.0,
+            "avg_order_value": 1825.28,
+            "min_order": 500.0,
+            "max_order": 9210.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "aov",
+        "title": "Average Order Value Segments",
+        "columns": [
+          "order_bucket",
+          "order_count",
+          "bucket_revenue"
+        ],
+        "row_count": 4,
+        "rows": [
+          {
+            "order_bucket": "500-1,000 EGP",
+            "order_count": 60,
+            "bucket_revenue": 43330.0
+          },
+          {
+            "order_bucket": "1,000-2,000 EGP",
+            "order_count": 100,
+            "bucket_revenue": 140070.0
+          },
+          {
+            "order_bucket": "2,000-5,000 EGP",
+            "order_count": 46,
+            "bucket_revenue": 135370.0
+          },
+          {
+            "order_bucket": "5,000+ EGP",
+            "order_count": 12,
+            "bucket_revenue": 79140.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "shipping",
+        "title": "Shipping Fee Analysis",
+        "columns": [
+          "shipping_fee",
+          "order_count",
+          "revenue",
+          "avg_subtotal"
+        ],
+        "row_count": 12,
+        "rows": [
+          {
+            "shipping_fee": 0.0,
+            "order_count": 2,
+            "revenue": 1730.0,
+            "avg_subtotal": 845.0
+          },
+          {
+            "shipping_fee": 10.0,
+            "order_count": 3,
+            "revenue": 7640.0,
+            "avg_subtotal": 2536.67
+          },
+          {
+            "shipping_fee": 40.0,
+            "order_count": 6,
+            "revenue": 5600.0,
+            "avg_subtotal": 893.33
+          },
+          {
+            "shipping_fee": 80.0,
+            "order_count": 2,
+            "revenue": 2260.0,
+            "avg_subtotal": 1050.0
+          },
+          {
+            "shipping_fee": 100.0,
+            "order_count": 3,
+            "revenue": 8780.0,
+            "avg_subtotal": 2826.67
+          },
+          {
+            "shipping_fee": 110.0,
+            "order_count": 178,
+            "revenue": 332910.0,
+            "avg_subtotal": 1760.28
+          },
+          {
+            "shipping_fee": 120.0,
+            "order_count": 12,
+            "revenue": 20250.0,
+            "avg_subtotal": 1567.5
+          },
+          {
+            "shipping_fee": 130.0,
+            "order_count": 1,
+            "revenue": 1150.0,
+            "avg_subtotal": 1020.0
+          },
+          {
+            "shipping_fee": 140.0,
+            "order_count": 1,
+            "revenue": 3170.0,
+            "avg_subtotal": 3030.0
+          },
+          {
+            "shipping_fee": 150.0,
+            "order_count": 3,
+            "revenue": 3900.0,
+            "avg_subtotal": 1150.0
+          },
+          {
+            "shipping_fee": 160.0,
+            "order_count": 5,
+            "revenue": 7680.0,
+            "avg_subtotal": 1376.0
+          },
+          {
+            "shipping_fee": 170.0,
+            "order_count": 2,
+            "revenue": 2840.0,
+            "avg_subtotal": 1250.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "items",
+        "title": "Items Per Order Distribution",
+        "columns": [
+          "item_count",
+          "orders",
+          "avg_order_value"
+        ],
+        "row_count": 19,
+        "rows": [
+          {
+            "item_count": 1,
+            "orders": 18,
+            "avg_order_value": 1170.0
+          },
+          {
+            "item_count": 2,
+            "orders": 26,
+            "avg_order_value": 1949.62
+          },
+          {
+            "item_count": 3,
+            "orders": 25,
+            "avg_order_value": 1552.4
+          },
+          {
+            "item_count": 4,
+            "orders": 15,
+            "avg_order_value": 1671.33
+          },
+          {
+            "item_count": 5,
+            "orders": 18,
+            "avg_order_value": 1191.67
+          },
+          {
+            "item_count": 6,
+            "orders": 38,
+            "avg_order_value": 1879.74
+          },
+          {
+            "item_count": 7,
+            "orders": 19,
+            "avg_order_value": 2095.79
+          },
+          {
+            "item_count": 8,
+            "orders": 9,
+            "avg_order_value": 2262.22
+          },
+          {
+            "item_count": 9,
+            "orders": 10,
+            "avg_order_value": 1297.0
+          },
+          {
+            "item_count": 10,
+            "orders": 15,
+            "avg_order_value": 1706.0
+          },
+          {
+            "item_count": 11,
+            "orders": 5,
+            "avg_order_value": 3730.0
+          },
+          {
+            "item_count": 12,
+            "orders": 4,
+            "avg_order_value": 2155.0
+          },
+          {
+            "item_count": 13,
+            "orders": 5,
+            "avg_order_value": 2002.0
+          },
+          {
+            "item_count": 14,
+            "orders": 2,
+            "avg_order_value": 2110.0
+          },
+          {
+            "item_count": 15,
+            "orders": 1,
+            "avg_order_value": 2490.0
+          },
+          {
+            "item_count": 16,
+            "orders": 1,
+            "avg_order_value": 1230.0
+          },
+          {
+            "item_count": 17,
+            "orders": 1,
+            "avg_order_value": 1970.0
+          },
+          {
+            "item_count": 20,
+            "orders": 5,
+            "avg_order_value": 3956.0
+          },
+          {
+            "item_count": 46,
+            "orders": 1,
+            "avg_order_value": 3690.0
+          }
+        ],
+        "error": null
+      }
+    ],
+    "products": [
+      {
+        "id": "top",
+        "title": "Top 20 Products by Revenue",
+        "columns": [
+          "item_code",
+          "name",
+          "units_sold",
+          "revenue",
+          "order_count",
+          "avg_unit_price"
+        ],
+        "row_count": 20,
+        "rows": [
+          {
+            "item_code": "BP5026",
+            "name": "APOLLO",
+            "units_sold": 60,
+            "revenue": 28810.0,
+            "order_count": 58,
+            "avg_unit_price": 483.28
+          },
+          {
+            "item_code": "BP5053",
+            "name": "Imaginal",
+            "units_sold": 49,
+            "revenue": 15110.0,
+            "order_count": 48,
+            "avg_unit_price": 302.29
+          },
+          {
+            "item_code": "BP5095",
+            "name": "Twister",
+            "units_sold": 27,
+            "revenue": 11150.0,
+            "order_count": 27,
+            "avg_unit_price": 412.96
+          },
+          {
+            "item_code": "BP6001",
+            "name": "Torino X1",
+            "units_sold": 35,
+            "revenue": 10210.0,
+            "order_count": 34,
+            "avg_unit_price": 276.76
+          },
+          {
+            "item_code": "BP9004",
+            "name": "Zoro",
+            "units_sold": 29,
+            "revenue": 9760.0,
+            "order_count": 26,
+            "avg_unit_price": 313.33
+          },
+          {
+            "item_code": "BP5020",
+            "name": "Heaven",
+            "units_sold": 29,
+            "revenue": 7850.0,
+            "order_count": 29,
+            "avg_unit_price": 270.69
+          },
+          {
+            "item_code": "BP5055",
+            "name": "Megane",
+            "units_sold": 21,
+            "revenue": 7460.0,
+            "order_count": 20,
+            "avg_unit_price": 333.0
+          },
+          {
+            "item_code": "BP5135",
+            "name": "Summer 25",
+            "units_sold": 20,
+            "revenue": 7320.0,
+            "order_count": 20,
+            "avg_unit_price": 366.0
+          },
+          {
+            "item_code": "BP5035",
+            "name": "LVL",
+            "units_sold": 15,
+            "revenue": 7140.0,
+            "order_count": 13,
+            "avg_unit_price": 476.0
+          },
+          {
+            "item_code": "BP9012",
+            "name": "Gravitas",
+            "units_sold": 19,
+            "revenue": 7080.0,
+            "order_count": 18,
+            "avg_unit_price": 362.78
+          },
+          {
+            "item_code": "BP5007",
+            "name": "Rio",
+            "units_sold": 20,
+            "revenue": 7020.0,
+            "order_count": 20,
+            "avg_unit_price": 351.0
+          },
+          {
+            "item_code": "BP5136",
+            "name": "Whisper Of Peace",
+            "units_sold": 31,
+            "revenue": 6670.0,
+            "order_count": 30,
+            "avg_unit_price": 228.06
+          },
+          {
+            "item_code": "BP5134",
+            "name": "Sea Scent 40",
+            "units_sold": 27,
+            "revenue": 6530.0,
+            "order_count": 27,
+            "avg_unit_price": 241.85
+          },
+          {
+            "item_code": "BP5104",
+            "name": "Magnificence",
+            "units_sold": 14,
+            "revenue": 6380.0,
+            "order_count": 13,
+            "avg_unit_price": 455.71
+          },
+          {
+            "item_code": "BP5039",
+            "name": "Reflex",
+            "units_sold": 13,
+            "revenue": 6310.0,
+            "order_count": 13,
+            "avg_unit_price": 485.38
+          },
+          {
+            "item_code": "BP9001",
+            "name": "Salah El-Deen",
+            "units_sold": 31,
+            "revenue": 6070.0,
+            "order_count": 29,
+            "avg_unit_price": 180.69
+          },
+          {
+            "item_code": "BP5100",
+            "name": "Brave",
+            "units_sold": 18,
+            "revenue": 6020.0,
+            "order_count": 18,
+            "avg_unit_price": 334.44
+          },
+          {
+            "item_code": "BP8005",
+            "name": "Ganymede",
+            "units_sold": 12,
+            "revenue": 5850.0,
+            "order_count": 11,
+            "avg_unit_price": 477.27
+          },
+          {
+            "item_code": "BP6002",
+            "name": "Wulong Tea",
+            "units_sold": 21,
+            "revenue": 5180.0,
+            "order_count": 21,
+            "avg_unit_price": 246.67
+          },
+          {
+            "item_code": "BP6019",
+            "name": "Herba Pura",
+            "units_sold": 17,
+            "revenue": 5060.0,
+            "order_count": 16,
+            "avg_unit_price": 266.25
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "type",
+        "title": "Tester vs Full-Size Performance",
+        "columns": [
+          "product_size_type",
+          "orders",
+          "units_sold",
+          "total_revenue",
+          "avg_price"
+        ],
+        "row_count": 18,
+        "rows": [
+          {
+            "product_size_type": "ml30",
+            "orders": 73,
+            "units_sold": 170,
+            "total_revenue": 98800.0,
+            "avg_price": 575.63
+          },
+          {
+            "product_size_type": "ml50",
+            "orders": 39,
+            "units_sold": 88,
+            "total_revenue": 76900.0,
+            "avg_price": 876.47
+          },
+          {
+            "product_size_type": "tester-10ml",
+            "orders": 83,
+            "units_sold": 335,
+            "total_revenue": 59980.0,
+            "avg_price": 178.99
+          },
+          {
+            "product_size_type": "ml100",
+            "orders": 19,
+            "units_sold": 26,
+            "total_revenue": 47650.0,
+            "avg_price": 1832.69
+          },
+          {
+            "product_size_type": "tester-3ml",
+            "orders": 65,
+            "units_sold": 424,
+            "total_revenue": 28840.0,
+            "avg_price": 68.5
+          },
+          {
+            "product_size_type": "tester-5ml",
+            "orders": 66,
+            "units_sold": 250,
+            "total_revenue": 24600.0,
+            "avg_price": 98.4
+          },
+          {
+            "product_size_type": "ml60",
+            "orders": 17,
+            "units_sold": 23,
+            "total_revenue": 24000.0,
+            "avg_price": 1043.48
+          },
+          {
+            "product_size_type": "pcs",
+            "orders": 4,
+            "units_sold": 29,
+            "total_revenue": 2810.0,
+            "avg_price": 96.9
+          },
+          {
+            "product_size_type": "6Xml10",
+            "orders": 1,
+            "units_sold": 2,
+            "total_revenue": 2200.0,
+            "avg_price": 1100.0
+          },
+          {
+            "product_size_type": "tester-Sml",
+            "orders": 11,
+            "units_sold": 20,
+            "total_revenue": 2000.0,
+            "avg_price": 100.0
+          },
+          {
+            "product_size_type": "60ml",
+            "orders": 1,
+            "units_sold": 1,
+            "total_revenue": 1100.0,
+            "avg_price": 1100.0
+          },
+          {
+            "product_size_type": "m50",
+            "orders": 1,
+            "units_sold": 1,
+            "total_revenue": 850.0,
+            "avg_price": 850.0
+          },
+          {
+            "product_size_type": "30ml",
+            "orders": 1,
+            "units_sold": 1,
+            "total_revenue": 600.0,
+            "avg_price": 600.0
+          },
+          {
+            "product_size_type": "pes",
+            "orders": 3,
+            "units_sold": 5,
+            "total_revenue": 460.0,
+            "avg_price": 92.0
+          },
+          {
+            "product_size_type": "ml10",
+            "orders": 2,
+            "units_sold": 2,
+            "total_revenue": 360.0,
+            "avg_price": 180.0
+          },
+          {
+            "product_size_type": "ml5",
+            "orders": 1,
+            "units_sold": 2,
+            "total_revenue": 200.0,
+            "avg_price": 100.0
+          },
+          {
+            "product_size_type": "ml3",
+            "orders": 1,
+            "units_sold": 1,
+            "total_revenue": 0.0,
+            "avg_price": 0.0
+          },
+          {
+            "product_size_type": "mi3",
+            "orders": 1,
+            "units_sold": 2,
+            "total_revenue": 0.0,
+            "avg_price": 0.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "size",
+        "title": "Revenue by Bottle Size",
+        "columns": [
+          "size",
+          "orders",
+          "units_sold",
+          "revenue",
+          "avg_price"
+        ],
+        "row_count": 18,
+        "rows": [
+          {
+            "size": "ml30",
+            "orders": 73,
+            "units_sold": 170,
+            "revenue": 98800.0,
+            "avg_price": 575.63
+          },
+          {
+            "size": "ml50",
+            "orders": 39,
+            "units_sold": 88,
+            "revenue": 76900.0,
+            "avg_price": 876.47
+          },
+          {
+            "size": "tester-10ml",
+            "orders": 83,
+            "units_sold": 335,
+            "revenue": 59980.0,
+            "avg_price": 178.99
+          },
+          {
+            "size": "ml100",
+            "orders": 19,
+            "units_sold": 26,
+            "revenue": 47650.0,
+            "avg_price": 1832.69
+          },
+          {
+            "size": "tester-3ml",
+            "orders": 65,
+            "units_sold": 424,
+            "revenue": 28840.0,
+            "avg_price": 68.5
+          },
+          {
+            "size": "tester-5ml",
+            "orders": 66,
+            "units_sold": 250,
+            "revenue": 24600.0,
+            "avg_price": 98.4
+          },
+          {
+            "size": "ml60",
+            "orders": 17,
+            "units_sold": 23,
+            "revenue": 24000.0,
+            "avg_price": 1043.48
+          },
+          {
+            "size": "pcs",
+            "orders": 4,
+            "units_sold": 29,
+            "revenue": 2810.0,
+            "avg_price": 96.9
+          },
+          {
+            "size": "6Xml10",
+            "orders": 1,
+            "units_sold": 2,
+            "revenue": 2200.0,
+            "avg_price": 1100.0
+          },
+          {
+            "size": "tester-Sml",
+            "orders": 11,
+            "units_sold": 20,
+            "revenue": 2000.0,
+            "avg_price": 100.0
+          },
+          {
+            "size": "60ml",
+            "orders": 1,
+            "units_sold": 1,
+            "revenue": 1100.0,
+            "avg_price": 1100.0
+          },
+          {
+            "size": "m50",
+            "orders": 1,
+            "units_sold": 1,
+            "revenue": 850.0,
+            "avg_price": 850.0
+          },
+          {
+            "size": "30ml",
+            "orders": 1,
+            "units_sold": 1,
+            "revenue": 600.0,
+            "avg_price": 600.0
+          },
+          {
+            "size": "pes",
+            "orders": 3,
+            "units_sold": 5,
+            "revenue": 460.0,
+            "avg_price": 92.0
+          },
+          {
+            "size": "ml10",
+            "orders": 2,
+            "units_sold": 2,
+            "revenue": 360.0,
+            "avg_price": 180.0
+          },
+          {
+            "size": "ml5",
+            "orders": 1,
+            "units_sold": 2,
+            "revenue": 200.0,
+            "avg_price": 100.0
+          },
+          {
+            "size": "ml3",
+            "orders": 1,
+            "units_sold": 1,
+            "revenue": 0.0,
+            "avg_price": 0.0
+          },
+          {
+            "size": "mi3",
+            "orders": 1,
+            "units_sold": 2,
+            "revenue": 0.0,
+            "avg_price": 0.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "slow",
+        "title": "Slow-Moving Products",
+        "columns": [
+          "item_code",
+          "name",
+          "total_units",
+          "orders",
+          "revenue"
+        ],
+        "row_count": 109,
+        "rows": [
+          {
+            "item_code": "BPO",
+            "name": "9s! si95",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPOOOO",
+            "name": "Forest Secrets",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BP6017",
+            "name": "HABI ROUGE tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPOOOO",
+            "name": "imaginal",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BP5037",
+            "name": "JM",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPOOOO",
+            "name": "Lylac",
+            "total_units": 2,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPO",
+            "name": "olla [sls",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPOOOO",
+            "name": "Pegasus Homme",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPOOOO",
+            "name": "Red Sea 2",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BPO",
+            "name": "sbi95",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 0.0
+          },
+          {
+            "item_code": "BP9001",
+            "name": "Salah El-Deen tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP90",
+            "name": "Russian Black Tea",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5134",
+            "name": "Sea Scent 40 tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5018",
+            "name": "Stella",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5050",
+            "name": "Sunset tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5085",
+            "name": "Torino X3",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5083",
+            "name": "Vibrazione tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5136",
+            "name": "Whisper Of Peace tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP6002",
+            "name": "Wulong Tea tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP8009",
+            "name": "Pegasus Homme Parfum tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5138",
+            "name": "Pegasus Homme tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5027",
+            "name": "PORTOFINO tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5105",
+            "name": "Power of Attraction",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP6015",
+            "name": "oud Satin tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP8004",
+            "name": "Purpose tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5126",
+            "name": "North",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5038",
+            "name": "Interaction",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP63",
+            "name": "Imaginal",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5148",
+            "name": "Lady Bianca",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5109",
+            "name": "lrish",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5003",
+            "name": "Majestic tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5079",
+            "name": "IMPERIAL",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5078",
+            "name": "Comfort",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP6016",
+            "name": "“Homme Ideal 1",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5091",
+            "name": "Elysee Intense tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5076",
+            "name": "Apollo Oud",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5026",
+            "name": "APOLLO tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5150",
+            "name": "Arab Tonka tester-3ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP900",
+            "name": "Beverly Hills",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5S011",
+            "name": "Black Extreme",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5031",
+            "name": "CINNAHONEY",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 70.0
+          },
+          {
+            "item_code": "BP5098",
+            "name": "Blue Pegasus tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP5093",
+            "name": "Avatar tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP5147",
+            "name": "Hot Vanilla",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BPOOOO",
+            "name": "Marijuana",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP5035",
+            "name": "LVL tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BPOOO",
+            "name": "Omar Al Mokhtar",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP9006",
+            "name": "Zarix tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP9004",
+            "name": "Zoro tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP5136",
+            "name": "Whisper Of Peace tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP7001",
+            "name": "Wanderluste tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP6001",
+            "name": "Torino X1 tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP9001",
+            "name": "Salah El-Deen tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BPS007",
+            "name": "Rio",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP5007",
+            "name": "Rio tester-5ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 100.0
+          },
+          {
+            "item_code": "BP5047",
+            "name": "Red Wood",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 140.0
+          },
+          {
+            "item_code": "BP5008",
+            "name": "Scorpion",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 140.0
+          },
+          {
+            "item_code": "BP6025",
+            "name": "Outlands A tester-3ml",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 140.0
+          },
+          {
+            "item_code": "BP5114",
+            "name": "Charming Saffron",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 140.0
+          },
+          {
+            "item_code": "BP5121",
+            "name": "Angle of Power",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 170.0
+          },
+          {
+            "item_code": "BP6022",
+            "name": "Interacion Black Iris",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 170.0
+          },
+          {
+            "item_code": "BP5057",
+            "name": "Oud Cedar",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 170.0
+          },
+          {
+            "item_code": "BP6005",
+            "name": "Russian Black Tea",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 170.0
+          },
+          {
+            "item_code": "BP5116",
+            "name": "Royal Touch",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5048",
+            "name": "Santiago",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BPOOO",
+            "name": "Safran C",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BPO",
+            "name": "Salah Eldeen",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP7003",
+            "name": "Town",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP6002",
+            "name": "Wulong Tea tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP6015",
+            "name": "oud Satin tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP6016",
+            "name": "L’'Homme Ideal 1",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5104",
+            "name": "Magnificence tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP8004",
+            "name": "Purpose tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP6016",
+            "name": "L'Homme Ideal 1",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP8003",
+            "name": "Hayat",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5131",
+            "name": "Hazelnut Shell",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5065",
+            "name": "GOLDEN ROSE",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5091",
+            "name": "Elysee Intense tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5075",
+            "name": "Apollo X tester-10ml",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5087",
+            "name": "Apple Cloud",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5088",
+            "name": "COCA",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 180.0
+          },
+          {
+            "item_code": "BP5134",
+            "name": "Megane",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 200.0
+          },
+          {
+            "item_code": "BP5081",
+            "name": "Memories",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 250.0
+          },
+          {
+            "item_code": "BP6016",
+            "name": "LHomme Ideal 1",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 250.0
+          },
+          {
+            "item_code": "BP5094",
+            "name": "Jazz",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 250.0
+          },
+          {
+            "item_code": "BP5004",
+            "name": "Majestic 2",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 250.0
+          },
+          {
+            "item_code": "BP5123",
+            "name": "Pegaso",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 250.0
+          },
+          {
+            "item_code": "BP5089",
+            "name": "Pasha",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 270.0
+          },
+          {
+            "item_code": "BP5149",
+            "name": "Toscano Leather",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 280.0
+          },
+          {
+            "item_code": "BP5001",
+            "name": "MR SAM",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 500.0
+          },
+          {
+            "item_code": "BP6017",
+            "name": "HABI ROUGE",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 600.0
+          },
+          {
+            "item_code": "BPS5007",
+            "name": "Rio",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 600.0
+          },
+          {
+            "item_code": "BP5077",
+            "name": "Flames",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 620.0
+          },
+          {
+            "item_code": "BP8001",
+            "name": "Kuttay",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 620.0
+          },
+          {
+            "item_code": "BP5132",
+            "name": "Dark Desire",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 650.0
+          },
+          {
+            "item_code": "BP5122",
+            "name": "Greatness",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 650.0
+          },
+          {
+            "item_code": "BP5041",
+            "name": "Black K",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 650.0
+          },
+          {
+            "item_code": "BP5074",
+            "name": "Regal",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 730.0
+          },
+          {
+            "item_code": "BP5103",
+            "name": "Joy",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 800.0
+          },
+          {
+            "item_code": "BP7006",
+            "name": "Rebel",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 850.0
+          },
+          {
+            "item_code": "BP5084",
+            "name": "Neroli Bomb",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 870.0
+          },
+          {
+            "item_code": "BP6012",
+            "name": "Amber Oud",
+            "total_units": 2,
+            "orders": 2,
+            "revenue": 870.0
+          },
+          {
+            "item_code": "BP9005",
+            "name": "Safran C",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 900.0
+          },
+          {
+            "item_code": "BP5058",
+            "name": "THE CALL OF THE WILD",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 1600.0
+          },
+          {
+            "item_code": "BP5002",
+            "name": "LORD GEORGE",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 1600.0
+          },
+          {
+            "item_code": "BPOO1",
+            "name": "Apollo",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 2000.0
+          },
+          {
+            "item_code": "BP5117",
+            "name": "Deep Calm",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 2000.0
+          },
+          {
+            "item_code": "BP9004",
+            "name": "Discovery Box",
+            "total_units": 2,
+            "orders": 1,
+            "revenue": 2200.0
+          },
+          {
+            "item_code": "BP5017",
+            "name": "Tony|M",
+            "total_units": 1,
+            "orders": 1,
+            "revenue": 2250.0
+          }
+        ],
+        "error": null
+      }
+    ],
+    "geography": [
+      {
+        "id": "city",
+        "title": "Revenue by City",
+        "columns": [
+          "city",
+          "total_orders",
+          "total_revenue",
+          "avg_order_value",
+          "pct_of_orders"
+        ],
+        "row_count": 22,
+        "rows": [
+          {
+            "city": "Cairo",
+            "total_orders": 76,
+            "total_revenue": 164410.0,
+            "avg_order_value": 2163.29,
+            "pct_of_orders": 35.7
+          },
+          {
+            "city": "Giza",
+            "total_orders": 34,
+            "total_revenue": 69230.0,
+            "avg_order_value": 2036.18,
+            "pct_of_orders": 16.0
+          },
+          {
+            "city": "Alexandria",
+            "total_orders": 17,
+            "total_revenue": 31950.0,
+            "avg_order_value": 1879.41,
+            "pct_of_orders": 8.0
+          },
+          {
+            "city": "Dakahlia",
+            "total_orders": 13,
+            "total_revenue": 20740.0,
+            "avg_order_value": 1595.38,
+            "pct_of_orders": 6.1
+          },
+          {
+            "city": "Beheira",
+            "total_orders": 11,
+            "total_revenue": 17390.0,
+            "avg_order_value": 1580.91,
+            "pct_of_orders": 5.2
+          },
+          {
+            "city": "Sharqia",
+            "total_orders": 13,
+            "total_revenue": 17150.0,
+            "avg_order_value": 1319.23,
+            "pct_of_orders": 6.1
+          },
+          {
+            "city": "Qalyubia",
+            "total_orders": 10,
+            "total_revenue": 10850.0,
+            "avg_order_value": 1085.0,
+            "pct_of_orders": 4.7
+          },
+          {
+            "city": "Fayoum",
+            "total_orders": 6,
+            "total_revenue": 9410.0,
+            "avg_order_value": 1568.33,
+            "pct_of_orders": 2.8
+          },
+          {
+            "city": "Asyut",
+            "total_orders": 5,
+            "total_revenue": 8710.0,
+            "avg_order_value": 1742.0,
+            "pct_of_orders": 2.3
+          },
+          {
+            "city": "Matruh",
+            "total_orders": 5,
+            "total_revenue": 8300.0,
+            "avg_order_value": 1660.0,
+            "pct_of_orders": 2.3
+          },
+          {
+            "city": "Monufia",
+            "total_orders": 4,
+            "total_revenue": 6780.0,
+            "avg_order_value": 1695.0,
+            "pct_of_orders": 1.9
+          },
+          {
+            "city": "Aswan",
+            "total_orders": 2,
+            "total_revenue": 4700.0,
+            "avg_order_value": 2350.0,
+            "pct_of_orders": 0.9
+          },
+          {
+            "city": "Sohag",
+            "total_orders": 3,
+            "total_revenue": 4610.0,
+            "avg_order_value": 1536.67,
+            "pct_of_orders": 1.4
+          },
+          {
+            "city": "Gharbia",
+            "total_orders": 2,
+            "total_revenue": 3160.0,
+            "avg_order_value": 1580.0,
+            "pct_of_orders": 0.9
+          },
+          {
+            "city": "South Sinai",
+            "total_orders": 3,
+            "total_revenue": 2980.0,
+            "avg_order_value": 993.33,
+            "pct_of_orders": 1.4
+          },
+          {
+            "city": "New Valley",
+            "total_orders": 2,
+            "total_revenue": 2840.0,
+            "avg_order_value": 1420.0,
+            "pct_of_orders": 0.9
+          },
+          {
+            "city": "33.5)!",
+            "total_orders": 1,
+            "total_revenue": 1590.0,
+            "avg_order_value": 1590.0,
+            "pct_of_orders": 0.5
+          },
+          {
+            "city": "Ismailia",
+            "total_orders": 2,
+            "total_revenue": 1390.0,
+            "avg_order_value": 695.0,
+            "pct_of_orders": 0.9
+          },
+          {
+            "city": "Minya",
+            "total_orders": 1,
+            "total_revenue": 1200.0,
+            "avg_order_value": 1200.0,
+            "pct_of_orders": 0.5
+          },
+          {
+            "city": "NATIONAL BANK OF EGYPT",
+            "total_orders": 1,
+            "total_revenue": 1090.0,
+            "avg_order_value": 1090.0,
+            "pct_of_orders": 0.5
+          },
+          {
+            "city": ", Cairo Governorate 4450233, Egypt",
+            "total_orders": 1,
+            "total_revenue": 710.0,
+            "avg_order_value": 710.0,
+            "pct_of_orders": 0.5
+          },
+          {
+            "city": "City: Cairo",
+            "total_orders": 1,
+            "total_revenue": 660.0,
+            "avg_order_value": 660.0,
+            "pct_of_orders": 0.5
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "aov_city",
+        "title": "Average Order Value by City",
+        "columns": [
+          "city",
+          "orders",
+          "avg_order_value",
+          "avg_subtotal",
+          "max_order"
+        ],
+        "row_count": 13,
+        "rows": [
+          {
+            "city": "Cairo",
+            "orders": 76,
+            "avg_order_value": 2163.29,
+            "avg_subtotal": 2056.05,
+            "max_order": 9210.0
+          },
+          {
+            "city": "Giza",
+            "orders": 34,
+            "avg_order_value": 2036.18,
+            "avg_subtotal": 1926.47,
+            "max_order": 7360.0
+          },
+          {
+            "city": "Alexandria",
+            "orders": 17,
+            "avg_order_value": 1879.41,
+            "avg_subtotal": 1769.41,
+            "max_order": 7210.0
+          },
+          {
+            "city": "Asyut",
+            "orders": 5,
+            "avg_order_value": 1742.0,
+            "avg_subtotal": 1622.0,
+            "max_order": 2720.0
+          },
+          {
+            "city": "Monufia",
+            "orders": 4,
+            "avg_order_value": 1695.0,
+            "avg_subtotal": 1585.0,
+            "max_order": 3690.0
+          },
+          {
+            "city": "Matruh",
+            "orders": 5,
+            "avg_order_value": 1660.0,
+            "avg_subtotal": 1540.0,
+            "max_order": 3170.0
+          },
+          {
+            "city": "Dakahlia",
+            "orders": 13,
+            "avg_order_value": 1595.38,
+            "avg_subtotal": 1529.23,
+            "max_order": 4400.0
+          },
+          {
+            "city": "Beheira",
+            "orders": 11,
+            "avg_order_value": 1580.91,
+            "avg_subtotal": 1470.91,
+            "max_order": 3460.0
+          },
+          {
+            "city": "Fayoum",
+            "orders": 6,
+            "avg_order_value": 1568.33,
+            "avg_subtotal": 1450.0,
+            "max_order": 3550.0
+          },
+          {
+            "city": "Sohag",
+            "orders": 3,
+            "avg_order_value": 1536.67,
+            "avg_subtotal": 1416.67,
+            "max_order": 1870.0
+          },
+          {
+            "city": "Sharqia",
+            "orders": 13,
+            "avg_order_value": 1319.23,
+            "avg_subtotal": 1209.23,
+            "max_order": 2360.0
+          },
+          {
+            "city": "Qalyubia",
+            "orders": 10,
+            "avg_order_value": 1085.0,
+            "avg_subtotal": 975.0,
+            "max_order": 1920.0
+          },
+          {
+            "city": "South Sinai",
+            "orders": 3,
+            "avg_order_value": 993.33,
+            "avg_subtotal": 833.33,
+            "max_order": 1260.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "city_products",
+        "title": "Top Product Per City",
+        "columns": [
+          "city",
+          "top_product",
+          "units_sold"
+        ],
+        "row_count": 22,
+        "rows": [
+          {
+            "city": "Cairo",
+            "top_product": "APOLLO",
+            "units_sold": 17
+          },
+          {
+            "city": "Beheira",
+            "top_product": "Imaginal",
+            "units_sold": 8
+          },
+          {
+            "city": "Giza",
+            "top_product": "Torino X1",
+            "units_sold": 8
+          },
+          {
+            "city": "Alexandria",
+            "top_product": "APOLLO",
+            "units_sold": 7
+          },
+          {
+            "city": "Dakahlia",
+            "top_product": "APOLLO",
+            "units_sold": 5
+          },
+          {
+            "city": "Sharqia",
+            "top_product": "Whisper Of Peace",
+            "units_sold": 5
+          },
+          {
+            "city": "Qalyubia",
+            "top_product": "Sea Scent 40",
+            "units_sold": 3
+          },
+          {
+            "city": "Fayoum",
+            "top_product": "Torino X1",
+            "units_sold": 3
+          },
+          {
+            "city": "Matruh",
+            "top_product": "APOLLO",
+            "units_sold": 3
+          },
+          {
+            "city": "Asyut",
+            "top_product": "APOLLO",
+            "units_sold": 3
+          },
+          {
+            "city": "Aswan",
+            "top_product": "Ganymede",
+            "units_sold": 2
+          },
+          {
+            "city": "Monufia",
+            "top_product": "APOLLO",
+            "units_sold": 2
+          },
+          {
+            "city": "Gharbia",
+            "top_product": "Apollo",
+            "units_sold": 2
+          },
+          {
+            "city": "New Valley",
+            "top_product": "Guevara",
+            "units_sold": 2
+          },
+          {
+            "city": "Sohag",
+            "top_product": "Accent",
+            "units_sold": 2
+          },
+          {
+            "city": "South Sinai",
+            "top_product": "Brave",
+            "units_sold": 2
+          },
+          {
+            "city": "Ismailia",
+            "top_product": "Twister",
+            "units_sold": 1
+          },
+          {
+            "city": "NATIONAL BANK OF EGYPT",
+            "top_product": "Whisper Of Peace",
+            "units_sold": 1
+          },
+          {
+            "city": "Minya",
+            "top_product": "Blue Diamond",
+            "units_sold": 1
+          },
+          {
+            "city": ", Cairo Governorate 4450233, Egypt",
+            "top_product": "Avatar tester-5ml",
+            "units_sold": 1
+          },
+          {
+            "city": "33.5)!",
+            "top_product": "Summer 25",
+            "units_sold": 1
+          },
+          {
+            "city": "City: Cairo",
+            "top_product": "Soleil",
+            "units_sold": 1
+          }
+        ],
+        "error": null
+      }
+    ],
+    "time_trends": [
+      {
+        "id": "daily",
+        "title": "Daily Sales Trend",
+        "columns": [
+          "order_date",
+          "orders",
+          "daily_revenue",
+          "avg_order_value"
+        ],
+        "row_count": 49,
+        "rows": [
+          {
+            "order_date": "2026-03-23",
+            "orders": 1,
+            "daily_revenue": 1150.0,
+            "avg_order_value": 1150.0
+          },
+          {
+            "order_date": "2026-04-01",
+            "orders": 4,
+            "daily_revenue": 12460.0,
+            "avg_order_value": 3115.0
+          },
+          {
+            "order_date": "2026-04-02",
+            "orders": 6,
+            "daily_revenue": 6010.0,
+            "avg_order_value": 1001.67
+          },
+          {
+            "order_date": "2026-04-03",
+            "orders": 7,
+            "daily_revenue": 7100.0,
+            "avg_order_value": 1014.29
+          },
+          {
+            "order_date": "2026-04-04",
+            "orders": 5,
+            "daily_revenue": 10360.0,
+            "avg_order_value": 2072.0
+          },
+          {
+            "order_date": "2026-04-05",
+            "orders": 2,
+            "daily_revenue": 2020.0,
+            "avg_order_value": 1010.0
+          },
+          {
+            "order_date": "2026-04-06",
+            "orders": 3,
+            "daily_revenue": 5120.0,
+            "avg_order_value": 1706.67
+          },
+          {
+            "order_date": "2026-04-07",
+            "orders": 2,
+            "daily_revenue": 2180.0,
+            "avg_order_value": 1090.0
+          },
+          {
+            "order_date": "2026-04-08",
+            "orders": 5,
+            "daily_revenue": 4280.0,
+            "avg_order_value": 856.0
+          },
+          {
+            "order_date": "2026-04-10",
+            "orders": 4,
+            "daily_revenue": 12250.0,
+            "avg_order_value": 3062.5
+          },
+          {
+            "order_date": "2026-04-11",
+            "orders": 4,
+            "daily_revenue": 9330.0,
+            "avg_order_value": 2332.5
+          },
+          {
+            "order_date": "2026-04-12",
+            "orders": 1,
+            "daily_revenue": 1260.0,
+            "avg_order_value": 1260.0
+          },
+          {
+            "order_date": "2026-04-13",
+            "orders": 5,
+            "daily_revenue": 7560.0,
+            "avg_order_value": 1512.0
+          },
+          {
+            "order_date": "2026-04-14",
+            "orders": 4,
+            "daily_revenue": 11420.0,
+            "avg_order_value": 2855.0
+          },
+          {
+            "order_date": "2026-04-15",
+            "orders": 3,
+            "daily_revenue": 10480.0,
+            "avg_order_value": 3493.33
+          },
+          {
+            "order_date": "2026-04-16",
+            "orders": 3,
+            "daily_revenue": 6670.0,
+            "avg_order_value": 2223.33
+          },
+          {
+            "order_date": "2026-04-17",
+            "orders": 2,
+            "daily_revenue": 2320.0,
+            "avg_order_value": 1160.0
+          },
+          {
+            "order_date": "2026-04-18",
+            "orders": 5,
+            "daily_revenue": 11160.0,
+            "avg_order_value": 2232.0
+          },
+          {
+            "order_date": "2026-04-19",
+            "orders": 6,
+            "daily_revenue": 7050.0,
+            "avg_order_value": 1175.0
+          },
+          {
+            "order_date": "2026-04-20",
+            "orders": 3,
+            "daily_revenue": 5020.0,
+            "avg_order_value": 1673.33
+          },
+          {
+            "order_date": "2026-04-21",
+            "orders": 5,
+            "daily_revenue": 7770.0,
+            "avg_order_value": 1554.0
+          },
+          {
+            "order_date": "2026-04-22",
+            "orders": 2,
+            "daily_revenue": 1620.0,
+            "avg_order_value": 810.0
+          },
+          {
+            "order_date": "2026-04-23",
+            "orders": 1,
+            "daily_revenue": 1160.0,
+            "avg_order_value": 1160.0
+          },
+          {
+            "order_date": "2026-04-24",
+            "orders": 4,
+            "daily_revenue": 10030.0,
+            "avg_order_value": 2507.5
+          },
+          {
+            "order_date": "2026-04-25",
+            "orders": 8,
+            "daily_revenue": 19830.0,
+            "avg_order_value": 2478.75
+          },
+          {
+            "order_date": "2026-04-27",
+            "orders": 7,
+            "daily_revenue": 11890.0,
+            "avg_order_value": 1698.57
+          },
+          {
+            "order_date": "2026-04-28",
+            "orders": 6,
+            "daily_revenue": 7470.0,
+            "avg_order_value": 1245.0
+          },
+          {
+            "order_date": "2026-04-29",
+            "orders": 3,
+            "daily_revenue": 4880.0,
+            "avg_order_value": 1626.67
+          },
+          {
+            "order_date": "2026-04-30",
+            "orders": 1,
+            "daily_revenue": 2180.0,
+            "avg_order_value": 2180.0
+          },
+          {
+            "order_date": "2026-05-01",
+            "orders": 3,
+            "daily_revenue": 4410.0,
+            "avg_order_value": 1470.0
+          },
+          {
+            "order_date": "2026-05-02",
+            "orders": 6,
+            "daily_revenue": 10270.0,
+            "avg_order_value": 1711.67
+          },
+          {
+            "order_date": "2026-05-03",
+            "orders": 6,
+            "daily_revenue": 17590.0,
+            "avg_order_value": 2931.67
+          },
+          {
+            "order_date": "2026-05-04",
+            "orders": 7,
+            "daily_revenue": 11950.0,
+            "avg_order_value": 1707.14
+          },
+          {
+            "order_date": "2026-05-05",
+            "orders": 5,
+            "daily_revenue": 13460.0,
+            "avg_order_value": 2692.0
+          },
+          {
+            "order_date": "2026-05-06",
+            "orders": 5,
+            "daily_revenue": 9880.0,
+            "avg_order_value": 1976.0
+          },
+          {
+            "order_date": "2026-05-07",
+            "orders": 6,
+            "daily_revenue": 10930.0,
+            "avg_order_value": 1821.67
+          },
+          {
+            "order_date": "2026-05-08",
+            "orders": 3,
+            "daily_revenue": 4300.0,
+            "avg_order_value": 1433.33
+          },
+          {
+            "order_date": "2026-05-09",
+            "orders": 9,
+            "daily_revenue": 12240.0,
+            "avg_order_value": 1360.0
+          },
+          {
+            "order_date": "2026-05-10",
+            "orders": 5,
+            "daily_revenue": 7080.0,
+            "avg_order_value": 1416.0
+          },
+          {
+            "order_date": "2026-05-11",
+            "orders": 4,
+            "daily_revenue": 7720.0,
+            "avg_order_value": 1930.0
+          },
+          {
+            "order_date": "2026-05-12",
+            "orders": 1,
+            "daily_revenue": 670.0,
+            "avg_order_value": 670.0
+          },
+          {
+            "order_date": "2026-05-13",
+            "orders": 12,
+            "daily_revenue": 26580.0,
+            "avg_order_value": 2215.0
+          },
+          {
+            "order_date": "2026-05-14",
+            "orders": 3,
+            "daily_revenue": 3540.0,
+            "avg_order_value": 1180.0
+          },
+          {
+            "order_date": "2026-05-15",
+            "orders": 6,
+            "daily_revenue": 14930.0,
+            "avg_order_value": 2488.33
+          },
+          {
+            "order_date": "2026-05-16",
+            "orders": 5,
+            "daily_revenue": 12980.0,
+            "avg_order_value": 2596.0
+          },
+          {
+            "order_date": "2026-05-17",
+            "orders": 7,
+            "daily_revenue": 9680.0,
+            "avg_order_value": 1382.86
+          },
+          {
+            "order_date": "2026-05-18",
+            "orders": 9,
+            "daily_revenue": 13270.0,
+            "avg_order_value": 1474.44
+          },
+          {
+            "order_date": "2026-05-19",
+            "orders": 3,
+            "daily_revenue": 3740.0,
+            "avg_order_value": 1246.67
+          },
+          {
+            "order_date": "2026-05-20",
+            "orders": 1,
+            "daily_revenue": 660.0,
+            "avg_order_value": 660.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "weekly",
+        "title": "Weekly Revenue Trend",
+        "columns": [
+          "yr",
+          "week_num",
+          "week_start",
+          "orders",
+          "weekly_revenue"
+        ],
+        "row_count": 9,
+        "rows": [
+          {
+            "yr": 2026,
+            "week_num": 13,
+            "week_start": "2026-03-23",
+            "orders": 1,
+            "weekly_revenue": 1150.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 14,
+            "week_start": "2026-04-01",
+            "orders": 22,
+            "weekly_revenue": 35930.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 15,
+            "week_start": "2026-04-05",
+            "orders": 20,
+            "weekly_revenue": 35180.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 16,
+            "week_start": "2026-04-12",
+            "orders": 23,
+            "weekly_revenue": 50870.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 17,
+            "week_start": "2026-04-19",
+            "orders": 29,
+            "weekly_revenue": 52480.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 18,
+            "week_start": "2026-04-27",
+            "orders": 26,
+            "weekly_revenue": 41100.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 19,
+            "week_start": "2026-05-03",
+            "orders": 41,
+            "weekly_revenue": 80350.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 20,
+            "week_start": "2026-05-10",
+            "orders": 36,
+            "weekly_revenue": 73500.0
+          },
+          {
+            "yr": 2026,
+            "week_num": 21,
+            "week_start": "2026-05-17",
+            "orders": 20,
+            "weekly_revenue": 27350.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "hour",
+        "title": "Orders by Hour of Day",
+        "columns": [
+          "hour_of_day",
+          "orders",
+          "revenue"
+        ],
+        "row_count": 22,
+        "rows": [
+          {
+            "hour_of_day": 0,
+            "orders": 12,
+            "revenue": 20160.0
+          },
+          {
+            "hour_of_day": 1,
+            "orders": 14,
+            "revenue": 31440.0
+          },
+          {
+            "hour_of_day": 2,
+            "orders": 9,
+            "revenue": 9880.0
+          },
+          {
+            "hour_of_day": 3,
+            "orders": 3,
+            "revenue": 2730.0
+          },
+          {
+            "hour_of_day": 5,
+            "orders": 4,
+            "revenue": 9140.0
+          },
+          {
+            "hour_of_day": 7,
+            "orders": 5,
+            "revenue": 9950.0
+          },
+          {
+            "hour_of_day": 8,
+            "orders": 1,
+            "revenue": 3910.0
+          },
+          {
+            "hour_of_day": 9,
+            "orders": 5,
+            "revenue": 7250.0
+          },
+          {
+            "hour_of_day": 10,
+            "orders": 11,
+            "revenue": 14450.0
+          },
+          {
+            "hour_of_day": 11,
+            "orders": 9,
+            "revenue": 17040.0
+          },
+          {
+            "hour_of_day": 12,
+            "orders": 10,
+            "revenue": 24290.0
+          },
+          {
+            "hour_of_day": 13,
+            "orders": 15,
+            "revenue": 27630.0
+          },
+          {
+            "hour_of_day": 14,
+            "orders": 17,
+            "revenue": 31460.0
+          },
+          {
+            "hour_of_day": 15,
+            "orders": 17,
+            "revenue": 39210.0
+          },
+          {
+            "hour_of_day": 16,
+            "orders": 11,
+            "revenue": 19020.0
+          },
+          {
+            "hour_of_day": 17,
+            "orders": 12,
+            "revenue": 27340.0
+          },
+          {
+            "hour_of_day": 18,
+            "orders": 10,
+            "revenue": 19490.0
+          },
+          {
+            "hour_of_day": 19,
+            "orders": 19,
+            "revenue": 28610.0
+          },
+          {
+            "hour_of_day": 20,
+            "orders": 7,
+            "revenue": 10900.0
+          },
+          {
+            "hour_of_day": 21,
+            "orders": 5,
+            "revenue": 9180.0
+          },
+          {
+            "hour_of_day": 22,
+            "orders": 9,
+            "revenue": 12610.0
+          },
+          {
+            "hour_of_day": 23,
+            "orders": 13,
+            "revenue": 22220.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "dow",
+        "title": "Day of Week Pattern",
+        "columns": [
+          "day_name",
+          "day_num",
+          "orders",
+          "revenue",
+          "avg_order_value"
+        ],
+        "row_count": 7,
+        "rows": [
+          {
+            "day_name": "Sunday",
+            "day_num": 1,
+            "orders": 27,
+            "revenue": 44680.0,
+            "avg_order_value": 1654.81
+          },
+          {
+            "day_name": "Monday",
+            "day_num": 2,
+            "orders": 39,
+            "revenue": 63680.0,
+            "avg_order_value": 1632.82
+          },
+          {
+            "day_name": "Tuesday",
+            "day_num": 3,
+            "orders": 26,
+            "revenue": 46710.0,
+            "avg_order_value": 1796.54
+          },
+          {
+            "day_name": "Wednesday",
+            "day_num": 4,
+            "orders": 35,
+            "revenue": 70840.0,
+            "avg_order_value": 2024.0
+          },
+          {
+            "day_name": "Thursday",
+            "day_num": 5,
+            "orders": 20,
+            "revenue": 30490.0,
+            "avg_order_value": 1524.5
+          },
+          {
+            "day_name": "Friday",
+            "day_num": 6,
+            "orders": 29,
+            "revenue": 55340.0,
+            "avg_order_value": 1908.28
+          },
+          {
+            "day_name": "Saturday",
+            "day_num": 7,
+            "orders": 42,
+            "revenue": 86170.0,
+            "avg_order_value": 2051.67
+          }
+        ],
+        "error": null
+      }
+    ],
+    "customers": [
+      {
+        "id": "repeat",
+        "title": "Repeat Customer Rate",
+        "columns": [
+          "unique_customers",
+          "total_orders",
+          "repeat_customers",
+          "repeat_rate_pct"
+        ],
+        "row_count": 1,
+        "rows": [
+          {
+            "unique_customers": 178,
+            "total_orders": 178,
+            "repeat_customers": 32,
+            "repeat_rate_pct": 18.0
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "top_customers",
+        "title": "Top 20 Customers by Lifetime Value",
+        "columns": [
+          "phone",
+          "display_name",
+          "total_orders",
+          "lifetime_value",
+          "first_order",
+          "last_order",
+          "days_active"
+        ],
+        "row_count": 20,
+        "rows": [
+          {
+            "phone": "01114312699",
+            "display_name": "محمدفتحي",
+            "total_orders": 3,
+            "lifetime_value": 19160.0,
+            "first_order": "2026-04-01T01:50:00",
+            "last_order": "2026-05-05T15:28:00",
+            "days_active": 34
+          },
+          {
+            "phone": "01287322559",
+            "display_name": "رفيق عدلى",
+            "total_orders": 2,
+            "lifetime_value": 14920.0,
+            "first_order": "2026-04-25T12:43:00",
+            "last_order": "2026-05-16T17:17:00",
+            "days_active": 21
+          },
+          {
+            "phone": "01552523326",
+            "display_name": "إبراهيم الفخراني",
+            "total_orders": 6,
+            "lifetime_value": 14740.0,
+            "first_order": "2026-04-03T20:35:00",
+            "last_order": "2026-05-08T20:31:00",
+            "days_active": 35
+          },
+          {
+            "phone": "01158225888",
+            "display_name": "عبيرسليم",
+            "total_orders": 1,
+            "lifetime_value": 8360.0,
+            "first_order": "2026-05-03T12:09:00",
+            "last_order": "2026-05-03T12:09:00",
+            "days_active": 0
+          },
+          {
+            "phone": "0000",
+            "display_name": "نادرالحداد",
+            "total_orders": 3,
+            "lifetime_value": 8180.0,
+            "first_order": "2026-05-07T07:25:00",
+            "last_order": "2026-05-11T10:02:00",
+            "days_active": 4
+          },
+          {
+            "phone": "000",
+            "display_name": "وليداسماعيل",
+            "total_orders": 2,
+            "lifetime_value": 7710.0,
+            "first_order": "2026-04-16T17:25:00",
+            "last_order": "2026-05-13T23:27:00",
+            "days_active": 27
+          },
+          {
+            "phone": "01277999000",
+            "display_name": "الكاشف JU عميد /",
+            "total_orders": 1,
+            "lifetime_value": 7360.0,
+            "first_order": "2026-04-15T13:35:00",
+            "last_order": "2026-04-15T13:35:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01000045293",
+            "display_name": "Tamer elaraby",
+            "total_orders": 1,
+            "lifetime_value": 7210.0,
+            "first_order": "2026-05-15T15:29:00",
+            "last_order": "2026-05-15T15:29:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01044256599",
+            "display_name": "احمدأسامه",
+            "total_orders": 2,
+            "lifetime_value": 6620.0,
+            "first_order": "2026-04-25T05:56:00",
+            "last_order": "2026-05-02T02:12:00",
+            "days_active": 7
+          },
+          {
+            "phone": "01507126677",
+            "display_name": "Muhmed Ali",
+            "total_orders": 1,
+            "lifetime_value": 6040.0,
+            "first_order": "2026-04-24T11:00:00",
+            "last_order": "2026-04-24T11:00:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01122012258",
+            "display_name": "احمدرجب",
+            "total_orders": 4,
+            "lifetime_value": 5660.0,
+            "first_order": "2026-04-14T16:29:00",
+            "last_order": "2026-05-18T00:55:00",
+            "days_active": 34
+          },
+          {
+            "phone": "01011168958",
+            "display_name": "Moamen Gaber",
+            "total_orders": 2,
+            "lifetime_value": 5570.0,
+            "first_order": "2026-04-03T19:44:00",
+            "last_order": "2026-04-27T00:42:00",
+            "days_active": 24
+          },
+          {
+            "phone": "01094909394",
+            "display_name": "عبدالله حسام مرزوق",
+            "total_orders": 2,
+            "lifetime_value": 5500.0,
+            "first_order": "2026-04-18T14:16:00",
+            "last_order": "2026-04-18T16:08:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01099601499",
+            "display_name": "/أوليد",
+            "total_orders": 1,
+            "lifetime_value": 5370.0,
+            "first_order": "2026-04-10T01:04:00",
+            "last_order": "2026-04-10T01:04:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01284249919",
+            "display_name": "سعيد محمدابراهيم",
+            "total_orders": 1,
+            "lifetime_value": 5310.0,
+            "first_order": "2026-05-18T18:22:00",
+            "last_order": "2026-05-18T18:22:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01063655574",
+            "display_name": "Ahmed Said",
+            "total_orders": 1,
+            "lifetime_value": 4970.0,
+            "first_order": "2026-04-10T23:50:00",
+            "last_order": "2026-04-10T23:50:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01555767011",
+            "display_name": "السعيد اشرف بديررمضان",
+            "total_orders": 2,
+            "lifetime_value": 4770.0,
+            "first_order": "2026-05-01T18:04:00",
+            "last_order": "2026-05-09T22:05:00",
+            "days_active": 8
+          },
+          {
+            "phone": "01009471652",
+            "display_name": "وليددياب",
+            "total_orders": 2,
+            "lifetime_value": 4720.0,
+            "first_order": "2026-05-13T14:15:00",
+            "last_order": "2026-05-13T14:23:00",
+            "days_active": 0
+          },
+          {
+            "phone": "01282069994",
+            "display_name": "Ziad ElSharnouby",
+            "total_orders": 2,
+            "lifetime_value": 4710.0,
+            "first_order": "2026-04-04T15:39:00",
+            "last_order": "2026-04-29T19:50:00",
+            "days_active": 25
+          },
+          {
+            "phone": "01227730348",
+            "display_name": "Mustafa Magdy",
+            "total_orders": 2,
+            "lifetime_value": 4700.0,
+            "first_order": "2026-04-25T15:35:00",
+            "last_order": "2026-05-02T15:13:00",
+            "days_active": 7
+          }
+        ],
+        "error": null
+      },
+      {
+        "id": "multi_order",
+        "title": "Multi-Order Customers Detail",
+        "columns": [
+          "phone",
+          "display_name",
+          "order_count",
+          "total_spent",
+          "avg_order_value",
+          "last_order_date"
+        ],
+        "row_count": 32,
+        "rows": [
+          {
+            "phone": "01552523326",
+            "display_name": "إبراهيم الفخراني",
+            "order_count": 6,
+            "total_spent": 14740.0,
+            "avg_order_value": 2456.67,
+            "last_order_date": "2026-05-08T20:31:00"
+          },
+          {
+            "phone": "01122012258",
+            "display_name": "احمدرجب",
+            "order_count": 4,
+            "total_spent": 5660.0,
+            "avg_order_value": 1415.0,
+            "last_order_date": "2026-05-18T00:55:00"
+          },
+          {
+            "phone": "01114312699",
+            "display_name": "محمدفتحي",
+            "order_count": 3,
+            "total_spent": 19160.0,
+            "avg_order_value": 6386.67,
+            "last_order_date": "2026-05-05T15:28:00"
+          },
+          {
+            "phone": "0000",
+            "display_name": "نادرالحداد",
+            "order_count": 3,
+            "total_spent": 8180.0,
+            "avg_order_value": 2726.67,
+            "last_order_date": "2026-05-11T10:02:00"
+          },
+          {
+            "phone": "01287322559",
+            "display_name": "رفيق عدلى",
+            "order_count": 2,
+            "total_spent": 14920.0,
+            "avg_order_value": 7460.0,
+            "last_order_date": "2026-05-16T17:17:00"
+          },
+          {
+            "phone": "000",
+            "display_name": "وليداسماعيل",
+            "order_count": 2,
+            "total_spent": 7710.0,
+            "avg_order_value": 3855.0,
+            "last_order_date": "2026-05-13T23:27:00"
+          },
+          {
+            "phone": "01044256599",
+            "display_name": "احمدأسامه",
+            "order_count": 2,
+            "total_spent": 6620.0,
+            "avg_order_value": 3310.0,
+            "last_order_date": "2026-05-02T02:12:00"
+          },
+          {
+            "phone": "01011168958",
+            "display_name": "Moamen Gaber",
+            "order_count": 2,
+            "total_spent": 5570.0,
+            "avg_order_value": 2785.0,
+            "last_order_date": "2026-04-27T00:42:00"
+          },
+          {
+            "phone": "01094909394",
+            "display_name": "عبدالله حسام مرزوق",
+            "order_count": 2,
+            "total_spent": 5500.0,
+            "avg_order_value": 2750.0,
+            "last_order_date": "2026-04-18T16:08:00"
+          },
+          {
+            "phone": "01555767011",
+            "display_name": "السعيد اشرف بديررمضان",
+            "order_count": 2,
+            "total_spent": 4770.0,
+            "avg_order_value": 2385.0,
+            "last_order_date": "2026-05-09T22:05:00"
+          },
+          {
+            "phone": "01009471652",
+            "display_name": "وليددياب",
+            "order_count": 2,
+            "total_spent": 4720.0,
+            "avg_order_value": 2360.0,
+            "last_order_date": "2026-05-13T14:23:00"
+          },
+          {
+            "phone": "01282069994",
+            "display_name": "Ziad ElSharnouby",
+            "order_count": 2,
+            "total_spent": 4710.0,
+            "avg_order_value": 2355.0,
+            "last_order_date": "2026-04-29T19:50:00"
+          },
+          {
+            "phone": "01227730348",
+            "display_name": "Mustafa Magdy",
+            "order_count": 2,
+            "total_spent": 4700.0,
+            "avg_order_value": 2350.0,
+            "last_order_date": "2026-05-02T15:13:00"
+          },
+          {
+            "phone": "01281111787",
+            "display_name": "Ahmed Ramden",
+            "order_count": 2,
+            "total_spent": 4400.0,
+            "avg_order_value": 2200.0,
+            "last_order_date": "2026-04-21T10:55:00"
+          },
+          {
+            "phone": "01030845818",
+            "display_name": "Rami mohamed",
+            "order_count": 2,
+            "total_spent": 4160.0,
+            "avg_order_value": 2080.0,
+            "last_order_date": "2026-05-11T19:21:00"
+          },
+          {
+            "phone": "01063122274",
+            "display_name": "mahmoud ellaithy",
+            "order_count": 2,
+            "total_spent": 3800.0,
+            "avg_order_value": 1900.0,
+            "last_order_date": "2026-05-16T11:57:00"
+          },
+          {
+            "phone": "01099455547",
+            "display_name": "محمد صبحى",
+            "order_count": 2,
+            "total_spent": 3600.0,
+            "avg_order_value": 1800.0,
+            "last_order_date": "2026-05-09T10:02:00"
+          },
+          {
+            "phone": "01285090909",
+            "display_name": "Ahmed Morgan",
+            "order_count": 2,
+            "total_spent": 3520.0,
+            "avg_order_value": 1760.0,
+            "last_order_date": "2026-05-04T23:38:00"
+          },
+          {
+            "phone": "01016835692",
+            "display_name": "ahmed mustafa ibrahim",
+            "order_count": 2,
+            "total_spent": 2850.0,
+            "avg_order_value": 1425.0,
+            "last_order_date": "2026-05-13T11:03:00"
+          },
+          {
+            "phone": "01021290638",
+            "display_name": "اسلام محمد",
+            "order_count": 2,
+            "total_spent": 2720.0,
+            "avg_order_value": 1360.0,
+            "last_order_date": "2026-05-13T13:09:00"
+          },
+          {
+            "phone": "01007547118",
+            "display_name": "eslam nasser",
+            "order_count": 2,
+            "total_spent": 2620.0,
+            "avg_order_value": 1310.0,
+            "last_order_date": "2026-05-13T16:43:00"
+          },
+          {
+            "phone": "01068207336",
+            "display_name": "Hosam Eldien Gamal",
+            "order_count": 2,
+            "total_spent": 2420.0,
+            "avg_order_value": 1210.0,
+            "last_order_date": "2026-04-28T12:45:00"
+          },
+          {
+            "phone": "01061312829",
+            "display_name": "الا .محمد",
+            "order_count": 2,
+            "total_spent": 2310.0,
+            "avg_order_value": 1155.0,
+            "last_order_date": "2026-04-06T02:05:00"
+          },
+          {
+            "phone": "01116326758",
+            "display_name": "Ahmed Abdelraouf",
+            "order_count": 2,
+            "total_spent": 2270.0,
+            "avg_order_value": 1135.0,
+            "last_order_date": "2026-04-23T00:46:00"
+          },
+          {
+            "phone": "1013844863",
+            "display_name": "Hadeer Hafez",
+            "order_count": 2,
+            "total_spent": 2260.0,
+            "avg_order_value": 1130.0,
+            "last_order_date": "2026-05-13T13:05:00"
+          },
+          {
+            "phone": "01276580295",
+            "display_name": "Ahmed Konswa",
+            "order_count": 2,
+            "total_spent": 2040.0,
+            "avg_order_value": 1020.0,
+            "last_order_date": "2026-05-18T12:02:00"
+          },
+          {
+            "phone": "01271851594",
+            "display_name": "رائدأيمن",
+            "order_count": 2,
+            "total_spent": 1920.0,
+            "avg_order_value": 960.0,
+            "last_order_date": "2026-05-04T22:32:00"
+          },
+          {
+            "phone": "01062944847",
+            "display_name": "احمدالرامى",
+            "order_count": 2,
+            "total_spent": 1920.0,
+            "avg_order_value": 960.0,
+            "last_order_date": "2026-05-04T13:58:00"
+          },
+          {
+            "phone": "01007352001",
+            "display_name": "منصور Jlo> محمود محمد",
+            "order_count": 2,
+            "total_spent": 1860.0,
+            "avg_order_value": 930.0,
+            "last_order_date": "2026-05-10T02:55:00"
+          },
+          {
+            "phone": "01100876678",
+            "display_name": "Amr Samir",
+            "order_count": 2,
+            "total_spent": 1820.0,
+            "avg_order_value": 910.0,
+            "last_order_date": "2026-04-25T11:13:00"
+          },
+          {
+            "phone": "01006595986",
+            "display_name": "mai abdelkhalek",
+            "order_count": 2,
+            "total_spent": 1600.0,
+            "avg_order_value": 800.0,
+            "last_order_date": "2026-05-08T14:26:00"
+          },
+          {
+            "phone": "01226699211",
+            "display_name": "دكتورمروة",
+            "order_count": 2,
+            "total_spent": 1490.0,
+            "avg_order_value": 745.0,
+            "last_order_date": "2026-04-28T15:29:00"
+          }
+        ],
+        "error": null
+      }
+    ]
+  }
+}
